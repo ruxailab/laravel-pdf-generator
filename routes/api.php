@@ -16,46 +16,25 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+$data = [];
 Route::get('/user/{id}', );
 // Route::post('/endpoint', ApiController::class);
 Route::post('/endpoint', function(Request $request){
+  $test = json_decode($request->getContent(), true);
 
-  $data = $request->all();
-  $pdf = PDF::loadView('pdf.invoice', $data);
-  return $pdf->download('invoice.pdf');
-  // $data = $request->all();
-  // $pdf = Pdf::loadView('pdf.invoice', $data);
-  // return $pdf;
+  // print_r($test);
+  $data = ['title'=>$test["items"][0]["name"], 'actualdate'=>$test["items"][0]["date"]];
+  print_r($data);
+  $pdf = PDF::loadView('pdf.invoice', compact('data'));
+  $pdf->render();
+  $pdfStream = $pdf->output();
+  // return $pdf->download('invoice.pdf')
+  return response($pdfStream, 200)
+    ->header('Content-Type', 'application/pdf')
+  ->header('Content-Disposition', 'attachment; filename="file.pdf"');
+  // return $data["items"][0]["quantity"];
 });
-   //try number 1
-  // $pdf = App::make('dompdf.wrapper');
-  // $pdf->loadHTML('<h1>Test</h1>');
-  // $pdf->render();
-  // return $pdf->stream();
 
-  //try number 2
-  
-  // $pdf = Pdf::loadView('myfile');
-  // $pdf->render();
-  // $pdf->stream('test.pdf');
-  // // return $data;
-  // // return $pdf->download('invoice.pdf');
-  // return $pdf;
-
-  //try number 3
-  // $dompdf = new Dompdf();
-  // $dompdf->loadHtml("<h1>teste</h1>" . $data);
-  // $dompdf->render();
-  // $dompdf->stream();
-  // return $dompdf;
-
-  //try number 4
-  // return Pdf::loadFile(public_path().'/myfile.html')->save('/path-to/my_stored_file.pdf')->stream('download.pdf');
-
-  //try number 5 - >blank pdf
-  // $data = $request->all();
-  // $pdf = Pdf::loadView('pdf.invoice', $data);
-  // return $pdf->download('invoice.pdf');
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

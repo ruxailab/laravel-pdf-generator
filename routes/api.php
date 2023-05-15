@@ -18,27 +18,25 @@ use Illuminate\Support\Facades\Route;
 */
 $data = [];
 Route::get('/user/{id}', );
-// Route::post('/endpoint', ApiController::class);
+
 Route::post('/endpoint', function(Request $request){
   $test = json_decode($request->getContent(), true);
-
-  // print_r($test);
-  $data = [
-  'title'=>$test["items"][0]["title"],
-  'actualdate'=>$test["items"][0]["date"], 
-  'aut'=>$test["items"][0]["aut"],
-];
+    $data = [
+      'title' => isset($test["items"][0]["title"]) ? $test["items"][0]["title"] : '',
+      'actualdate' => isset($test["items"][0]["date"]) ? $test["items"][0]["date"] : '', 
+      'aut' => isset($test["items"][0]["aut"]) ? $test["items"][0]["aut"] : '',
+    ];
   print_r($data);
+  
   $pdf = PDF::loadView('pdf.invoice', compact('data'));
   $pdf->render();
   $pdfStream = $pdf->output();
-  // return $pdf->download('invoice.pdf')
+
   return response($pdfStream, 200)
     ->header('Content-Type', 'application/pdf')
   ->header('Content-Disposition', 'attachment; filename="file.pdf"');
-  // return $data["items"][0]["quantity"];
-});
 
+});
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

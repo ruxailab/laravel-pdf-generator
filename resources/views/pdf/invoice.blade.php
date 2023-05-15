@@ -12,22 +12,28 @@
             width: 100%;
             border-collapse: collapse;
         }
-        th, td {
-            padding: 10px;
-            border: 1px solid #ccc;
-            text-align: left;
-        }
-        th {
-            background-color: #eee;
-        }
+
+        @page {
+        margin: 1cm;
+    }
+
+    .page-break {
+        page-break-inside: auto;
+        position:absolute;
+        bottom:1cm;
+        right:1cm;
+    }
     </style>
 </head>
 <body>
 @include('pdf.header')
+<div class="page-break">HELLO WORLD</div>
 @include('pdf.body')
-        
+<div class="page-break">HELLO WORLD</div>
   
     
 </body>
+<footer class="footer">
 
+</footer>
 </html>

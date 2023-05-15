@@ -49,54 +49,16 @@
 			left: 2%;
 			margin-top: 2%;
 		}
-		/* .bubble {
-            position: absolute;
-            bottom: 25px;
-            left: 15%;
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            opacity: 0.7;
-            box-shadow: 0px 0px 30px #ff6600;
-            background: linear-gradient(135deg, #ff7f00 0%, #ff4d00 100%);
-        }
-
-        .bubble2 {
-            position: absolute;
-            bottom: 25px;
-            left: 35%;
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            opacity: 0.7;
-            box-shadow: 0px 0px 30px #ff6600;
-            background: linear-gradient(135deg, #ff7f00 0%, #ff4d00 100%);
-        }
-
-        .bubble3 {
-            position: absolute;
-            bottom: 25px;
-            left: 55%;
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            opacity: 0.7;
-            box-shadow: 0px 0px 30px #ff6600;
-            background: linear-gradient(135deg, #ff7f00 0%, #ff4d00 100%);
-        } */
 	</style>
 </head>
 <body>
 	<div class="cape">
-		<h1 class="title">{{{ $data['actualdate'] }}}</h1>
+		<h1 class="title">{{{ $data['title'] }}}</h1>
 	</div>
 	<div class="info">
-		<p style="font-size: 36px; margin: 0;">Author Name</p>
-		<p>Date: 11th May, 2023</p>
+		<p style="font-size: 36px; margin: 0;">{{{$data['aut']}}}</p>
+		<p>Date:{{{ $data['actualdate'] }}}</p>
 
 	</div>
-	<!-- <div class="bubble"></div>
-   		<div class="bubble2"></div>
-    	<div class="bubble3"></div> -->
 </body>
 </html>

@@ -23,7 +23,11 @@ Route::post('/endpoint', function(Request $request){
   $test = json_decode($request->getContent(), true);
 
   // print_r($test);
-  $data = ['title'=>$test["items"][0]["name"], 'actualdate'=>$test["items"][0]["date"]];
+  $data = [
+  'title'=>$test["items"][0]["title"],
+  'actualdate'=>$test["items"][0]["date"], 
+  'aut'=>$test["items"][0]["aut"],
+];
   print_r($data);
   $pdf = PDF::loadView('pdf.invoice', compact('data'));
   $pdf->render();

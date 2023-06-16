@@ -40,15 +40,17 @@
 		}
 		
 		.info {
-			font-size: 24px;
+			font-size: 36px;
 			color: #333;
 			margin: 0;
 			padding: 0 30px;
 			position: absolute;
 			bottom: 0;
 			left: 2%;
-			margin-top: 2%;
+			margin-top: 0;
 		}
+		#footer { position: fixed; right: 10px; bottom: 10px; text-align: center;}
+        #footer .page:after { content: counter(page, decimal); }
 	</style>
 </head>
 <body>
@@ -56,9 +58,10 @@
 		<h1 class="title">{{{ $data['title'] }}}</h1>
 	</div>
 	<div class="info">
-		<p style="font-size: 36px; margin: 0;">{{{$data['aut']}}}</p>
-		<p>Date:{{{ $data['actualdate'] }}}</p>
+
+		<p>{{{ $data['actualdate'] }}}</p>
 
 	</div>
+  </div> 
 </body>
 </html>

@@ -90,21 +90,37 @@
             // Add more items as needed
         ]; ?>
 
+
+        @foreach ($data['heuristics'] as $element)
+                <div>
+                    <h3>{{ $element['title'] }}</h3>
+                    <ul>
+                        @foreach ($element['questions'] as $question)
+                        <li>
+                            <h4>{{ $question['title'] }}</h4>
+                            <p>{{ $question['descriptions'] }}</p>
+                        </li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endforeach
+
+
         @foreach($array as $key => $item)
             <div class="question">
                 <h3 class="question-title">Heuristic question {{ $key + 1 }}: {{ $item['question'] }}</h3>
                 <p>Heuristic extensive description for human eyes.</p>
             </div>
-            <div class="container">
+            {{{$data['test'][0]['text']}}}
             <div class="chart">
             <?php
-                $data = [30, 20, 15, 35, 100]; // Example data array
+                $example = [1, 9]; // Example example array
 
-                $total = array_sum($data);
+                $total = array_sum($example);
 
-                $colors = ['#FF8D23', '#FF7B2F', '#FF6937','#FE5B38', '#FD533A', '#F53D3B', '#EE303A']; // Orange tones
+                $colors = ['#EE303A', '#F53D3B', '#FD533A','#FE5B38', '#FF6937', '#FF7B2F', '#FF8D23']; // Orange tones
       
-                 foreach ($data as $index => $value) {
+                 foreach ($example as $index => $value) {
                      $percentage = ($value / $total) * 100;
                      $width = round($percentage, 2);
 
@@ -116,8 +132,9 @@
                      echo '</div>';
                   }
             ?>
+
   </div>
-    </div>
+
             <ul class="answer">
                 @foreach($item['answers'] as $answer)
                     <li>{{ $answer }}</li>

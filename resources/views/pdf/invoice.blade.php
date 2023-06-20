@@ -6,12 +6,15 @@
     <style>
         /* Define styles for the invoice */
         body {
-            padding:0px !important;
+            padding:0px;
             font-family: Arial, sans-serif;
         }
         table {
             width: 100%;
             border-collapse: collapse;
+        }
+        .documet{
+            padding: 1rem;
         }
 
         @page {
@@ -30,11 +33,18 @@
 <body>
 @include('pdf.header')
 <div class="page-break"></div>
-@include('pdf.body')s
-<div class="page-break"></div>
-@include('pdf.abstract')
-<div class="page-break"></div>
-@include('pdf.heuristics')
+    <div class="documet">
+    @if(isset($data['finalReport']) && $data['finalReport'] != '')
+        @include('pdf.finalReport')
+        <div class="page-break"></div>
+    @endif
+    
+    @if(isset($data['generalStatistics']) && $data['generalStatistics'] != '')
+        @include('pdf.generalStatistics')
+
+    @endif
+        @include('pdf.heuristics')
+    </div>
 </body>
 <footer class="footer">
 

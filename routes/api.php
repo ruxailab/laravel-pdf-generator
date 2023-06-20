@@ -1,8 +1,10 @@
 <?php
- use Dompdf\Dompdf;
+
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Route; 
+header("Access-Control-Allow-Methods: POST");
+header("Access-Control-Allow-Headers: Content-Type");
 
 // use App\Http\Controllers\ApiController;
 
@@ -24,9 +26,13 @@ Route::post('/endpoint', function(Request $request){
     $data = [
       'title' => isset($test["items"][0]["title"]) ? $test["items"][0]["title"] : '',
       'actualdate' => isset($test["items"][0]["date"]) ? $test["items"][0]["date"] : '', 
-      'aut' => isset($test["items"][0]["aut"]) ? $test["items"][0]["aut"] : '',
+      'finalReport' => isset($test["items"][0]["finalReport"]) ? $test["items"][0]["finalReport"] : '', 
+      'test' => isset($test["items"][0]["allOptions"]) ? $test["items"][0]["allOptions"] : '',
+      'heuristics'=> isset($test["items"][0]["testStructure"]) ? $test["items"][0]["testStructure"] : '',
+      'generalStatistics'=> isset($test["items"][0]["gstatistics"]) ? $test["items"][0]["gstatistics"] : '',
+      'statisticsTable'=> isset($test["items"][0]["statisticstable"]) ? $test["items"][0]["statisticstable"] : '',
+
     ];
-  print_r($data);
   
   $pdf = PDF::loadView('pdf.invoice', compact('data'));
   $pdf->render();

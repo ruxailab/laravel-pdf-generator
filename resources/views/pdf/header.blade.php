@@ -58,8 +58,8 @@
 		<h1 class="title">{{{ $data['title'] }}}</h1>
 	</div>
 	<div class="info">
+	<p>{{{ $data['actualdate'] }}}</p>
 
-		<p>{{{ $data['actualdate'] }}}</p>
 
 	</div>
   </div> 

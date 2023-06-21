@@ -31,7 +31,7 @@
     </style>
 </head>
 <body>
-@include('pdf.header')
+@include('pdf.cover')
 <div class="page-break"></div>
     <div class="documet">
     @if(isset($data['finalReport']) && $data['finalReport'] != '')

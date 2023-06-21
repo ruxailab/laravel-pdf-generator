@@ -3,13 +3,31 @@
 <head>
     <title>Heuristic Questions</title>
     <style>
-        body {
-            background-color: transparent;
-            margin: 0;
-            padding: 20px;
-            font-family: Arial, sans-serif;
-        }
-        .chart {
+/* Page settings */
+body {
+    background-color: transparent;
+    margin: 0;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.page-break {
+    page-break-before: always;
+    page-break-inside: avoid;
+    position:absolute;
+    bottom:1cm;
+    right:1cm;
+}
+
+h1{
+    color: #FFA600;
+    margin-top: 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #FFA600;
+}
+
+    /* Chart settings */    
+    .chart {
       width: 50vw;
     }
     
@@ -30,6 +48,8 @@
       line-height: 20px;
       color: white;
     }
+
+    /* General heuristics settings*/
         .heuristic {
             background-color: transparent;
             border-radius: 5px;
@@ -68,78 +88,77 @@
             margin-bottom: 0;
         }
 
-        .variable-div {
-            height: 1vh;
-            background-color: #FFA500;
-            margin-bottom: 5px;
-        }
     </style>
 </head>
 <body>
     <div class="heuristic">
-        <?php 
-        $array = [
-            [
-                'question' => 'Question example 1',
-                'answers' => ['Answer 1.1', 'Answer 1.2', 'Answer 1.3']
-            ],
-            [
-                'question' => 'Question example 2',
-                'answers' => ['Answer 2.1', 'Answer 2.2', 'Answer 2.3']
-            ],
-            // Add more items as needed
-        ]; ?>
-
-
-        @foreach ($data['heuristics'] as $element)
-                <div>
-                    <h3>{{ $element['title'] }}</h3>
-                    <ul>
-                        @foreach ($element['questions'] as $question)
-                        <li>
-                            <h4>{{ $question['title'] }}</h4>
-                            <p>{{ $question['descriptions'] }}</p>
-                        </li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endforeach
-
-
-        @foreach($array as $key => $item)
+        <h1>Reasearch Heuristics</h1>
+        @foreach($data['heuristics'] as $key => $item)
             <div class="question">
-                <h3 class="question-title">Heuristic question {{ $key + 1 }}: {{ $item['question'] }}</h3>
+                <h3 class="question-title">Heuristic question {{ $key + 1 }}: {{ $item['title'] }}</h3>
                 <p>Heuristic extensive description for human eyes.</p>
             </div>
-            {{{$data['test'][0]['text']}}}
             <div class="chart">
-            <?php
-                $example = [1, 9]; // Example example array
+                <?php
 
-                $total = array_sum($example);
+                    foreach ($data['testOptions'] as $option) {
+                        if (isset($option['text'])) {
+                            $variableName = $option['text'];
+                            $auxOptions[$variableName] = 0; // Initialize variable with value 0
+                        }
+                        if (isset($option['value'])) {
+                            $auxOptionsValue[] = $option['value'];
+                        }
+                    }
 
-                $colors = ['#EE303A', '#F53D3B', '#FD533A','#FE5B38', '#FF6937', '#FF7B2F', '#FF8D23']; // Orange tones
-      
-                 foreach ($example as $index => $value) {
-                     $percentage = ($value / $total) * 100;
-                     $width = round($percentage, 2);
+                    foreach ($data['testAnswers'] as $index => $answer) {
+                        foreach ($answer['heuristicQuestions'] as $heuristics) {
+                            
+                            foreach ($heuristics['heuristicQuestions'] as $questions) {
+                                $heuristicAnswer = $questions['heuristicAnswer'];
+                                foreach ($data['testOptions'] as $option) {
+                                    if (isset($option['value']) && $option['value'] == $heuristicAnswer) {
+                                        $variableName = $option['text'];
+                                        if (isset($auxOptions[$variableName])) {
+                                            $auxOptions[$variableName]++; // Increment the respective variable
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+    
 
-                     $colorIndex = round(($value / $total) * (count($colors) - 1));
-                     $color = $colors[$colorIndex];
+                    $total = array_sum($auxOptions);
 
-                     echo '<div class="bar" style="width: ' . $width . '%; background-color: ' . $color . ';">';
-                     echo '<div class="bar-value">' . $value . '</div>';
-                     echo '</div>';
-                  }
+                    $colors = ['#EE303A', '#F53D3B', '#FD533A','#FE5B38', '#FF6937', '#FF7B2F', '#FF8D23']; // Orange tones
+        
+                    foreach ($auxOptions as $index => $value) {
+                        $percentage = ($value / $total) * 100;
+                        $width = round($percentage, 2);
+
+                        $colorIndex = round(($value / $total) * (count($colors) - 1));
+                        $color = $colors[$colorIndex];
+
+                        echo '<div class="bar" style="width: ' . $width . '%; background-color: ' . $color . ';">';
+                        echo '<div class="bar-value">' . $value . '</div>';
+                        echo '</div>'; //end of the chart section
+                    }
+
             ?>
+                    @foreach ($item['questions'] as $question)
+                        <li class="answers">
+                            <h4>{{ $question['title'] }}</h4>
+                            <p>{{ $question['descriptions'] }}</p>
+                            <ul>
+                              
+                            </ul>
+                            
+                        </li>
+                        <div class="page-break"></div>
+                    @endforeach
 
-  </div>
-
-            <ul class="answer">
-                @foreach($item['answers'] as $answer)
-                    <li>{{ $answer }}</li>
-                @endforeach
-            </ul>
+           
         @endforeach
     </div>
 </body>

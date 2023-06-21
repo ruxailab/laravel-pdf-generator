@@ -47,10 +47,10 @@
         }
 
         .statistic h1 {
-            color: #FFA500;
+            color: #FFA600;
             margin-top: 0;
             padding-bottom: 10px;
-            border-bottom: 1px solid #FFA500;
+            border-bottom: 1px solid #FFA600;
         }
         .statistic h2{
             margin-top: 0;

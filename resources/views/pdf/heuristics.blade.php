@@ -91,6 +91,182 @@ h1{
     </style>
 </head>
 <body>
+<?php
+$example = '[
+    {
+        "total": 6,
+        "lastUpdate": null,
+        "progress": "100.0",
+        "submitted": true,
+        "userDocId": "FYRP8ZTFYYdqY1zkNUOu9kPxGKb2",
+        "heuristicQuestions": [
+            {
+                "heuristicTotal": 5,
+                "heuristicId": 1,
+                "heuristicTitle": "Visibilidad y estado del sistema ",
+                "heuristicQuestions": [
+                    {
+                        "heuristicAnswer": 1,
+                        "heuristicComment": "",
+                        "heuristicId": "1"
+                    },
+                    {
+                        "heuristicId": "2",
+                        "heuristicAnswer": 1,
+                        "heuristicComment": ""
+                    },
+                    {
+                        "heuristicAnswer": 1,
+                        "heuristicId": "3",
+                        "heuristicComment": ""
+                    },
+                    {
+                        "heuristicAnswer": 1,
+                        "heuristicId": "4",
+                        "heuristicComment": ""
+                    },
+                    {
+                        "heuristicAnswer": 0,
+                        "heuristicId": "5",
+                        "heuristicComment": ""
+                    }
+                ]
+            },
+            {
+                "heuristicId": 2,
+                "heuristicTitle": "bla",
+                "heuristicQuestions": [
+                    {
+                        "heuristicId": "1",
+                        "heuristicAnswer": 0.5,
+                        "heuristicComment": ""
+                    }
+                ],
+                "heuristicTotal": 1
+            }
+        ]
+    },
+    {
+        "progress": "100.0",
+        "userDocId": "VCbA9EMKkpOhVZlXFfrOu812CPq2",
+        "lastUpdate": null,
+        "heuristicQuestions": [
+            {
+                "heuristicId": 1,
+                "heuristicQuestions": [
+                    {
+                        "heuristicAnswer": 1,
+                        "heuristicComment": "Yes, the Google website includes visible titles for its pages,.",
+                        "heuristicId": "1"
+                    },
+                    {
+                        "heuristicComment": " sections of the website as needed.",
+                        "heuristicAnswer": 0,
+                        "heuristicId": "2"
+                    },
+                    {
+                        "heuristicAnswer": 0.5,
+                        "heuristicComment": "Yes, it is essential for a system or application to provide clear feedback and indications to users about what actions or processes are taking place. Users should have a clear understanding of what the system is doing at any given moment.\n\nTo ensure users know what the system or application is doing, consider the following practices:\n\nProvide visual cues: Use loading indicators, progress bars, or status messages to indicate ongoing processes or actions. This helps users understand that the system is working on their request.",
+                        "heuristicId": "3"
+                    },
+                    {
+                        "heuristicComment": "When the links are not clearly defined, it means that there is a lack of clarity or specificity in how the links are presented or labeled on a website or application. This can have a negative impact on the user experience and make it difficult for users to understand the purpose or destination of the links.",
+                        "heuristicId": "4",
+                        "heuristicAnswer": 0
+                    },
+                    {
+                        "heuristicAnswer": 1,
+                        "heuristicComment": "\nIn general, it is ideal for all actions within a system or application to be directly visible to users without requiring additional actions. This approach improves usability and ensures a smooth user experience. When actions are directly visible, users can easily identify and access the available options, reducing cognitive load and saving time.",
+                        "heuristicId": "5"
+                    }
+                ],
+                "heuristicTotal": 5,
+                "heuristicTitle": "Visibilidad y estado del sistema "
+            },
+            {
+                "heuristicTotal": 1,
+                "heuristicQuestions": [
+                    {
+                        "heuristicId": "1",
+                        "heuristicAnswer": 0,
+                        "heuristicComment": "não entendi a questão"
+                    }
+                ],
+                "heuristicId": 2,
+                "heuristicTitle": "bla"
+            }
+        ],
+        "submitted": true,
+        "total": 6
+    }
+]';$options = '[
+    {
+        "description": "you agree",
+        "value": 1,
+        "text": "Si"
+    },
+    {
+        "description": "you dont totally agree",
+        "text": "no si/ no no",
+        "value": 0.5
+    },
+    {
+        "description": "you disagree",
+        "text": "no",
+        "value": 0
+    },
+    {
+        "text": "no se aplica",
+        "description": "a questão não se aplica",
+        "value": null
+    }
+]';
+
+// Decode the JSON data
+$exampleArray = json_decode($example, true);
+$optionsArray = json_decode($options, true);
+
+// Counter array to store the element count
+$elementCount = array();
+
+// Iterate through each item in the example data
+foreach ($exampleArray as $item) {
+    // Iterate through each heuristic in the item
+    foreach ($item['heuristicQuestions'] as $heuristic) {
+        // Iterate through each question in the heuristic
+        foreach ($heuristic['heuristicQuestions'] as $question) {
+            // Get the question ID and answer
+            $questionId = $question['heuristicId'];
+            $answer = $question['heuristicAnswer'];
+            
+            // Find the corresponding text in the options array
+            $text = null;
+            foreach ($optionsArray as $option) {
+                if ($option['value'] === $answer) {
+                    $text = $option['text'];
+                    break;
+                }
+            }
+            
+            // Increment the counter for the question ID and answer text
+            if (!isset($elementCount[$questionId][$text])) {
+                $elementCount[$questionId][$text] = 1;
+            } else {
+                $elementCount[$questionId][$text]++;
+            }
+        }
+    }
+}
+
+// Display the element count
+foreach ($elementCount as $questionId => $answers) {
+    echo "<h3>Question " . $questionId . ":</h3>";
+    foreach ($answers as $text => $count) {
+        echo "<p>Answer " . $text . ": " . $count . " occurrences</p>";
+    }
+}
+?>
+
     <div class="heuristic">
         <h1>Reasearch Heuristics</h1>
         @foreach($data['heuristics'] as $key => $item)

@@ -223,8 +223,9 @@ $example = '[
 ]';
 
 // Decode the JSON data
-$exampleArray = json_decode($example, true);
-$optionsArray = json_decode($options, true);
+$exampleArray = $data['testAnswers'];
+$optionsArray = $data['testOptions'];
+
 
 // Counter array to store the element count
 $elementCount = array();
@@ -232,7 +233,7 @@ $elementCount = array();
 // Iterate through each item in the example data
 foreach ($exampleArray as $item) {
     // Iterate through each heuristic in the item
-    foreach ($item['heuristicQuestions'] as $heuristic) {
+    foreach ($item['heuristicQuestions'] as $index => $heuristic) {
         // Iterate through each question in the heuristic
         foreach ($heuristic['heuristicQuestions'] as $question) {
             // Get the question ID and answer
@@ -249,23 +250,36 @@ foreach ($exampleArray as $item) {
             }
             
             // Increment the counter for the question ID and answer text
-            if (!isset($elementCount[$questionId][$text])) {
-                $elementCount[$questionId][$text] = 1;
+            if (!isset($elementCount[$index][$questionId][$text])) {
+                $elementCount[$index][$questionId][$text] = 1;
             } else {
-                $elementCount[$questionId][$text]++;
+                $elementCount[$index][$questionId][$text]++;
             }
         }
     }
 }
 
-// Display the element count
-foreach ($elementCount as $questionId => $answers) {
-    echo "<h3>Question " . $questionId . ":</h3>";
-    foreach ($answers as $text => $count) {
-        echo "<p>Answer " . $text . ": " . $count . " occurrences</p>";
-    }
-}
 ?>
+
+<?php foreach ($elementCount as $index => $questions) : ?>
+        <h2>Heuristic <?php echo $index + 1; ?></h2>
+        <table>
+            <tr>
+                <th>Question ID</th>
+                <th>Answer</th>
+                <th>Count</th>
+            </tr>
+            <?php foreach ($questions as $questionId => $answers) : ?>
+                <?php foreach ($answers as $text => $count) : ?>
+                    <tr>
+                        <td><?php echo $questionId; ?></td>
+                        <td><?php echo $text; ?></td>
+                        <td><?php echo $count; ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php endforeach; ?>
+        </table>
+    <?php endforeach; ?>
 
     <div class="heuristic">
         <h1>Reasearch Heuristics</h1>

@@ -141,56 +141,6 @@
                 </table>
             </div>
         </div>
-    </div>
-
-    <div class="chart">
-                <?php
-
-                    foreach ($data['testOptions'] as $option) {
-                        if (isset($option['text'])) {
-                            $variableName = $option['text'];
-                            $auxOptions[$variableName] = 0; // Initialize variable with value 0
-                        }
-                        if (isset($option['value'])) {
-                            $auxOptionsValue[] = $option['value'];
-                        }
-                    }
-
-                    foreach ($data['testAnswers'] as $index => $answer) {
-                        foreach ($answer['heuristicQuestions'] as $heuristics) {
-                            
-                            foreach ($heuristics['heuristicQuestions'] as $questions) {
-                                $heuristicAnswer = $questions['heuristicAnswer'];
-                                foreach ($data['testOptions'] as $option) {
-                                    if (isset($option['value']) && $option['value'] == $heuristicAnswer) {
-                                        $variableName = $option['text'];
-                                        if (isset($auxOptions[$variableName])) {
-                                            $auxOptions[$variableName]++; // Increment the respective variable
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-    
-
-                    $total = array_sum($auxOptions);
-
-                    $colors = ['#EE303A', '#F53D3B', '#FD533A','#FE5B38', '#FF6937', '#FF7B2F', '#FF8D23']; // Orange tones
-        
-                    foreach ($auxOptions as $index => $value) {
-                        $percentage = ($value / $total) * 100;
-                        $width = round($percentage, 2);
-
-                        $colorIndex = round(($value / $total) * (count($colors) - 1));
-                        $color = $colors[$colorIndex];
-
-                        echo '<div class="bar" style="width: ' . $width . '%; background-color: ' . $color . ';">';
-                        echo '<div class="bar-value">' . $value . '</div>';
-                        echo '</div>'; //end of the chart section
-                    }
-
-            ?>
 
 </body>
 </html>

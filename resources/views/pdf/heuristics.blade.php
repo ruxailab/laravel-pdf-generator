@@ -19,75 +19,107 @@ body {
     right:1cm;
 }
 
-h1{
+h1 {
     color: #FFA600;
     margin-top: 0;
     padding-bottom: 10px;
     border-bottom: 1px solid #FFA600;
 }
 
-    /* Chart settings */    
-    .chart {
-      width: 50vw;
-    }
-    
-    .bar {
-      position: relative;
-      width: 100%;
-      height: 20px;
-      margin-bottom: 10px;
-      background-color: #2196F3;
-      transition: width 0.8s ease-in-out;
-    }
-    
-    .bar-value {
-      position: absolute;
-      top: 0;
-      right: 5px;
-      height: 100%;
-      line-height: 20px;
-      color: white;
-    }
+/* Chart settings */    
 
-    /* General heuristics settings*/
-        .heuristic {
-            background-color: transparent;
-            border-radius: 5px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin-bottom: 20px;
-        }
+.bar {
+  position: relative;
+  width: 100%;
+  height: 20px;
+  margin: 10px;
+  padding: 5px;
+  border-radius: 0 5px 5px 0;
+  background-color: #2196F3;
+  transition: width 0.8s ease-in-out;
+  display: flex;
+  align-items: center;
+}
 
-        .heuristic h3.question-title {
-            color: #FFA500;
-            font-weight: bold;
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
+.bar::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 1px; /* Adjust the width of the line as needed */
+  background-color: #000; /* Adjust the color of the line as needed */
+}
 
-        .heuristic .question {
-            color: #333333;
-            margin-bottom: 15px;
-        }
+.bar-value {
+  font-size: 20px;
+  float: right;
+  margin-top: auto; /* Align the value to the vertical middle */
+  margin-bottom: auto;
+  margin-right:4px;
+}
 
-        .heuristic .question p {
-            margin: 0;
-            line-height: 1.4;
-        }
+.value-name {
+  font-size: 20px;
+  float: left;
+  margin-top: auto; /* Align the text to the vertical middle */
+  margin-bottom: auto;
+}
 
-        .heuristic .answer {
-            margin-left: 20px;
-            list-style-type: disc;
-        }
+/* General heuristics settings */
+.heuristic {
+    background-color: transparent;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+}
 
-        .heuristic .answer li {
-            margin-bottom: 5px;
-        }
+.heuristic h3.question-title {
+    color: #FFA500;
+    font-weight: bold;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
 
-        .heuristic .answer li:last-child {
-            margin-bottom: 0;
-        }
+.heuristic .question {
+    color: #333333;
+    margin-bottom: 15px;
+}
 
+.heuristic .question p {
+    margin: 0;
+    line-height: 1.4;
+}
+
+.heuristic .answer {
+    margin-left: 20px;
+    list-style-type: disc;
+}
+
+.heuristic .answer li {
+    margin-bottom: 5px;
+}
+
+.heuristic .answer li:last-child {
+    margin-bottom: 0;
+}
+
+/* Comment formatting */
+.comment-list {
+     list-style-type: none;
+    padding: 0;
+    margin-top: 10px;
+}
+
+.comment-item {
+    margin-bottom: 10px;
+}
+
+.comment-text {
+    background-color: #f5f5f5;
+    padding: 10px;
+}
     </style>
 </head>
 <body>
@@ -96,8 +128,6 @@ h1{
 // Decode the JSON data
 $Answers = $data['testAnswers'];
 $optionsArray = $data['testOptions'];
-
-
 
 // Counter array to store the element count
 $elementCount = array();
@@ -141,82 +171,70 @@ foreach ($Answers as $item) {
     }
 }
 
-
-foreach ($commentsArray as $index => $heuristics) {
-    echo "<h2>Heuristic " . ($index + 1) . "</h2>";
-    foreach ($heuristics as $questionId => $comments) {
-        echo "<h3>Question ID: " . $questionId . "</h3>";
-        foreach ($comments as $comment) {
-            echo "<p>" . $comment . "</p>";
-        }
-    }
-}
 ?>
 
-<?php foreach ($elementCount as $index => $questions) : ?>
-        <h2>Heuristic <?php echo $index + 1; ?></h2>
-        <table>
-            <tr>
-                <th>Question ID</th>
-                <th>Answer</th>
-                <th>Count</th>
-            </tr>
-            <?php foreach ($questions as $questionId => $answers) : ?>
-                <?php foreach ($answers as $text => $count) : ?>
-                    <tr>
-                        <td><?php echo $questionId; ?></td>
-                        <td><?php echo $text; ?></td>
-                        <td><?php echo $count; ?></td>
-                    </tr>
-                <?php endforeach; ?>
-            <?php endforeach; ?>
-        </table>
-    <?php endforeach; ?>
 
-    <div class="heuristic">
-    <h1>Research Heuristics</h1>
-@foreach($data['heuristics'] as $key => $item)
-    <div class="question">
-        <h3 class="question-title">Heuristic question {{ $key + 1 }}: {{ $item['title'] }}</h3>
-        <p>Heuristic extensive description for human eyes.</p>
-    </div>
+<div class="heuristic">
+    @foreach($data['heuristics'] as $key => $item)
+        <div class="question">
+            <h1 class="question-title">Heuristic {{ $key + 1 }}: {{ $item['title'] }}</h1>
+        </div>
 
-    <div class="chart">
-        <?php
-        $heuristicQuestions = $data['heuristics'][$key]['questions'];
+        <div class="chart">
 
-        foreach ($heuristicQuestions as $question) {
-            $questionId = $question['id'];
-            $total = array_sum($elementCount[$key][$questionId]);
+    <?php
+    $heuristicQuestions = $data['heuristics'][$key]['questions'];
 
-            $colors = ['#EE303A', '#F53D3B', '#FD533A', '#FE5B38', '#FF6937', '#FF7B2F', '#FF8D23']; // Orange tones
-            echo '<h4>'. $question['title']. '</h4>';
-            echo '<p>'. $question['descriptions']. '</p>';
-            foreach ($elementCount[$key][$questionId] as $text => $value) {
+    foreach ($heuristicQuestions as $question) {
+        $questionId = $question['id'];
+        $total = array_sum($elementCount[$key][$questionId]);
+
+        $colors = ['#EE303A', '#F53D3B', '#FD533A', '#FE5B38', '#FF6937', '#FF7B2F', '#FF8D23']; // Orange tones
+        echo '<h2>' . $question['title'] . '</h2>';
+        echo '<p>' . $question['descriptions'] . '</p>';
+        echo '<div style="background-color: #F0F0F0; padding: 10px; border-radius: 20px;">';
+      
+        // Loop through the optionsArray instead of using array_reverse
+        foreach ($optionsArray as $option) {
+            $text = $option['text'];
+            if (isset($elementCount[$key][$questionId][$text])) {
+                $value = $elementCount[$key][$questionId][$text];
+        
                 $percentage = ($value / $total) * 100;
                 $width = round($percentage, 2);
-
+        
                 $colorIndex = round(($value / $total) * (count($colors) - 1));
                 $color = $colors[$colorIndex];
-
+        
                 echo '<div class="bar" style="width: ' . $width . '%; background-color: ' . $color . ';">';
                 echo '<div class="bar-value">' . $value . '</div>';
-                echo '</div>'; //end of the bar section
-            }
-            
-            // Display the corresponding comments for the current chart
-            if (isset($commentsArray[$key][$questionId])) {
-                echo '<ul>';
-                foreach ($commentsArray[$key][$questionId] as $comment) {
-                    echo '<li>' . $comment . '</li>';
-                }
-                echo '</ul>';
+                echo '<div class="value-name">' . $text . '</div>';
+                echo '</div>';
             }
         }
-        ?>
-        <div class="page-break"></div>
-    </div>
-@endforeach
-    </div>
+        
+        echo '</div>';
+                // Display the corresponding comments for the current chart
+                if (isset($commentsArray[$key][$questionId])) {
+                    $nonEmptyComments = array_filter($commentsArray[$key][$questionId]); // Filter out empty comments
+                    if (!empty($nonEmptyComments)) {
+                        $commentCount = count($nonEmptyComments);
+                        echo '<div class="comment-title">';
+                        echo ($commentCount > 1) ? '<h3>Comments</h3>' : '<h3>Comment</h3>';
+                        echo '</div>';
+                        echo '<ul class="comment-list">';
+                        foreach ($nonEmptyComments as $comment) {
+                            echo '<li class="comment-item"><div class="comment-text">' . $comment . '</div></li>';
+                        }
+                        echo '</ul>';
+                    }
+                }
+                
+                echo '<div class="page-break"></div>';
+            }
+            ?>
+        </div>
+    @endforeach
+</div>
 </body>
 </html>

@@ -54,6 +54,7 @@
         }
         .statistic h2{
             margin-top: 0;
+            margin-left: 10px;
             padding-bottom: 2px;
         }
 
@@ -108,39 +109,63 @@
             <h1>Statistics</h1>
             <div class="data">
                 <h2>General statistics</h2>
-                <p>Usability percentage: {{{$data['generalStatistics']['average']}}}</p>
-                <p>Max: {{{$data['generalStatistics']['max']}}}</p>
-                <p>Min: {{{$data['generalStatistics']['min']}}}</p>
-                <p>Standard Deviation: {{{$data['generalStatistics']['sd']}}}</p>
-                <p>Total test questions(s): {{{$data['statisticsTable']['items'][0]['aplication'] + $data['statisticsTable']['items'][0]['noAplication'] }}}</p>
+                <p>Usability percentage: {{ $data['generalStatistics']['average'] }}</p>
+                <p>Max: {{ $data['generalStatistics']['max'] }}</p>
+                <p>Min: {{ $data['generalStatistics']['min'] }}</p>
+                <p>Standard Deviation: {{ $data['generalStatistics']['sd'] }}</p>
+                <p>Total test questions(s): {{ $data['statisticsTable']['items'][0]['aplication'] + $data['statisticsTable']['items'][0]['noAplication'] }}</p>
                 <hr>
                 <h2>Individual statistics</h2>
-                <table >
+                <table>
                     <thead>
                         <tr>
-                            @foreach($data['statisticsTable']['header'] as $header)
-                                <th>{{ $header['text'] }}</th>
-                            @endforeach
+                            <th>Evaluator</th>
+                            <th>Result</th>
+                            <th>Aplication</th>
+                            <th>No Aplication</th>
+                            <th>Answered (%)</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($data['statisticsTable']['items'] as $item)
                             <tr>
-                                <td ><span class="chip" >{{ $item['evaluator']}}</span></td>
+                                <td><span class="chip">{{ $item['evaluator'] }}</span></td>
                                 <td>
-                                    <span class="chip" >
+                                    <span class="chip">
                                         {{ $item['result'] }}%
                                     </span>
                                 </td>
-                                <td><span class="chip" >{{ $item['aplication'] }}</span></td>
-                                <td><span class="chip" >{{ $item['noAplication'] }}</span></td>
-                                <td><span class="chip" >{{ $item['answered'] }}%</span></td>
+                                <td><span class="chip">{{ $item['aplication'] }}</span></td>
+                                <td><span class="chip">{{ $item['noAplication'] }}</span></td>
+                                <td><span class="chip">{{ $item['answered'] }}%</span></td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                <hr>
+                <div class="options">
+                <h2>Test Options</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="text-align: left;">Name</th>
+                            <th style="text-align: left;">Description</th>
+                            <th style="text-align: left;">Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($data['testOptions'] as $option)
+                            <tr>
+                                <td>{{ $option['text'] }}</td>
+                                <td>{{ $option['description'] }}</td>
+                                <td>{{ $option['value'] !== null ? $option['value'] : 'null' }}</td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
+            </div>
         </div>
-
+    </div>
 </body>
 </html>

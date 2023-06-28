@@ -33,7 +33,7 @@ h1 {
   width: 100%;
   height: 20px;
   margin: 10px;
-  padding: 5px;
+  padding: 10px;
   border-radius: 0 5px 5px 0;
   background-color: #2196F3;
   transition: width 0.8s ease-in-out;
@@ -54,16 +54,27 @@ h1 {
 .bar-value {
   font-size: 20px;
   float: right;
-  margin-top: auto; /* Align the value to the vertical middle */
-  margin-bottom: auto;
   margin-right:4px;
+  margin-bottom: 100px;
+  color: black;
 }
 
 .value-name {
   font-size: 20px;
   float: left;
-  margin-top: auto; /* Align the text to the vertical middle */
-  margin-bottom: auto;
+  position: absolute;
+  white-space: nowrap;
+  color: black;
+  margin-bottom:5px;
+}
+
+.value-name-inside {
+  margin-right: 4px;
+}
+
+.value-name-outside {
+  margin-left: 4px;
+  color: black;
 }
 
 /* General heuristics settings */
@@ -173,7 +184,7 @@ foreach ($Answers as $item) {
 
 ?>
 
-
+<!-- Start of HTML markup -->
 <div class="heuristic">
     @foreach($data['heuristics'] as $key => $item)
         <div class="question">
@@ -185,54 +196,71 @@ foreach ($Answers as $item) {
     <?php
     $heuristicQuestions = $data['heuristics'][$key]['questions'];
 
-    foreach ($heuristicQuestions as $question) {
+    foreach ($heuristicQuestions as $index => $question) {
         $questionId = $question['id'];
         $total = array_sum($elementCount[$key][$questionId]);
 
         $colors = ['#EE303A', '#F53D3B', '#FD533A', '#FE5B38', '#FF6937', '#FF7B2F', '#FF8D23']; // Orange tones
-        echo '<h2>' . $question['title'] . '</h2>';
+        
+        // Output the question title and description
+        echo '<h2>' . $index+1 ." - ". $question['title'] . '</h2>';
         echo '<p>' . $question['descriptions'] . '</p>';
+        
+        // Start of the chart container
         echo '<div style="background-color: #F0F0F0; padding: 10px; border-radius: 20px;">';
       
-        // Loop through the optionsArray instead of using array_reverse
-        foreach ($optionsArray as $option) {
-            $text = $option['text'];
-            if (isset($elementCount[$key][$questionId][$text])) {
-                $value = $elementCount[$key][$questionId][$text];
+// Loop through the optionsArray instead of using array_reverse
+foreach ($optionsArray as $option) {
+    $text = $option['text'];
+    if (isset($elementCount[$key][$questionId][$text])) {
+        $value = $elementCount[$key][$questionId][$text];
+
+        $percentage = ($value / $total) * 100;
+        $width = round($percentage, 2);
+
+        $colorIndex = round(($value / $total) * (count($colors) - 1));
+        $color = $colors[$colorIndex];
+
+        // Determine the CSS class for value-name based on percentage
+        $valueNameClass = ($percentage >= 50) ? 'value-name value-name-inside' : 'value-name value-name-outside';
+
+        // Set the left value for value-name-outside based on percentage
+        $leftValue = ($percentage < 30) ? 5*$percentage . '%' : '0px';
+
+        // Output the bar with value and text
+        echo '<div class="bar" style="width: ' . $width . '%; background-color: ' . $color . ';">';
+        echo '<div class="bar-value">' . $value . '</div>';
+
+        // Output the value-name with the appropriate CSS class and left value
+        echo '<div class="' . $valueNameClass . '" style="margin-left: ' . $leftValue . ';">' . $text . '</div>';
+
+        echo '</div>';
+    }
+}
         
-                $percentage = ($value / $total) * 100;
-                $width = round($percentage, 2);
+        // End of the chart container
+        echo '</div>';
         
-                $colorIndex = round(($value / $total) * (count($colors) - 1));
-                $color = $colors[$colorIndex];
-        
-                echo '<div class="bar" style="width: ' . $width . '%; background-color: ' . $color . ';">';
-                echo '<div class="bar-value">' . $value . '</div>';
-                echo '<div class="value-name">' . $text . '</div>';
+        // Display the corresponding comments for the current chart
+        if (isset($commentsArray[$key][$questionId])) {
+            $nonEmptyComments = array_filter($commentsArray[$key][$questionId]); // Filter out empty comments
+            if (!empty($nonEmptyComments)) {
+                $commentCount = count($nonEmptyComments);
+                echo '<div class="comment-title">';
+                echo ($commentCount > 1) ? '<h3>Comments</h3>' : '<h3>Comment</h3>';
                 echo '</div>';
+                echo '<ul class="comment-list">';
+                foreach ($nonEmptyComments as $comment) {
+                    echo '<li class="comment-item"><div class="comment-text">' . $comment . '</div></li>';
+                }
+                echo '</ul>';
             }
         }
         
-        echo '</div>';
-                // Display the corresponding comments for the current chart
-                if (isset($commentsArray[$key][$questionId])) {
-                    $nonEmptyComments = array_filter($commentsArray[$key][$questionId]); // Filter out empty comments
-                    if (!empty($nonEmptyComments)) {
-                        $commentCount = count($nonEmptyComments);
-                        echo '<div class="comment-title">';
-                        echo ($commentCount > 1) ? '<h3>Comments</h3>' : '<h3>Comment</h3>';
-                        echo '</div>';
-                        echo '<ul class="comment-list">';
-                        foreach ($nonEmptyComments as $comment) {
-                            echo '<li class="comment-item"><div class="comment-text">' . $comment . '</div></li>';
-                        }
-                        echo '</ul>';
-                    }
-                }
-                
-                echo '<div class="page-break"></div>';
-            }
-            ?>
+        // Add a page break after each chart
+        echo '<div class="page-break"></div>';
+    }
+    ?>
         </div>
     @endforeach
 </div>

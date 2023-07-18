@@ -48,7 +48,6 @@
 
         .statistic h1 {
             color: #FFA600;
-            margin-top: 0;
             padding-bottom: 10px;
             border-bottom: 1px solid #FFA600;
         }
@@ -142,28 +141,31 @@
                         @endforeach
                     </tbody>
                 </table>
-                <hr>
-                <div class="options">
-                <h2>Test Options</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th style="text-align: left;">Name</th>
-                            <th style="text-align: left;">Description</th>
-                            <th style="text-align: left;">Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($data['testOptions'] as $option)
-                            <tr>
-                                <td>{{ $option['text'] }}</td>
-                                <td>{{ $option['description'] }}</td>
-                                <td>{{ $option['value'] !== null ? $option['value'] : 'null' }}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+                <hr>   
+
+                @if(isset($data['testOptions']) && $data['testOptions'] != '')
+                    <div class="options">
+                        <h2>Test Options</h2>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th style="text-align: left;">Name</th>
+                                        <th style="text-align: left;">Description</th>
+                                        <th style="text-align: left;">Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($data['testOptions'] as $option)
+                                        <tr>
+                                            <td>{{ $option['text'] }}</td>
+                                            <td>{{ $option['description'] }}</td>
+                                            <td>{{ $option['value'] !== null ? $option['value'] : 'null' }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                    </div>      
+                @endif
             </div>
         </div>
     </div>

@@ -26,6 +26,9 @@ Route::post('/endpoint', function(Request $request){
     $data = [
       'title' => isset($test["items"][0]["title"]) ? $test["items"][0]["title"] : '',
       'actualdate' => isset($test["items"][0]["date"]) ? $test["items"][0]["date"] : '', 
+      'creationDate' => isset($test["items"][0]["creationDate"]) ? $test["items"][0]["creationDate"] : '', 
+      'creatorEmail'=> isset($test["items"][0]["creatorEmail"]) ? $test["items"][0]["creatorEmail"] : '',
+      'testDescription' => isset($test["items"][0]["testDescription"]) ? $test["items"][0]["testDescription"] : '',
       'finalReport' => isset($test["items"][0]["finalReport"]) ? $test["items"][0]["finalReport"] : '', 
       'testOptions' => isset($test["items"][0]["allOptions"]) ? $test["items"][0]["allOptions"] : '',
       'testAnswers' => isset($test["items"][0]["allAnswers"]) ? $test["items"][0]["allAnswers"] : '',

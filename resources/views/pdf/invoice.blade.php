@@ -9,6 +9,9 @@
             padding:0px;
             font-family: Arial, sans-serif;
         }
+        h1{
+            margin-top: 2rem;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
@@ -32,6 +35,11 @@
 </head>
 <body>
 @include('pdf.cover')
+
+<div class="page-break"></div>
+@include('pdf.foreword')
+<div class="page-break"></div>
+@include('pdf.description')
 <div class="page-break"></div>
     <div class="documet">
     @if(isset($data['finalReport']) && $data['finalReport'] != '')
@@ -46,7 +54,5 @@
         @include('pdf.heuristics')
     </div>
 </body>
-<footer class="footer">
 
-</footer>
 </html>

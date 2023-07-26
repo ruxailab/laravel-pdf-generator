@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Allow-Headers: Content-Type");
 
+
 // use App\Http\Controllers\ApiController;
 
 /*
@@ -39,6 +40,7 @@ Route::post('/endpoint', function(Request $request){
     ];
   
   $pdf = PDF::loadView('pdf.invoice', compact('data'));
+  $pdf->getDomPDF()->set_option('enable_remote', true);
   $pdf->render();
   $pdfStream = $pdf->output();
 

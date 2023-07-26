@@ -24,7 +24,6 @@
             margin-top: 3rem;
         
             color: #FFA600;
-            margin-top: 0;
             padding-bottom: 10px;
             border-bottom: 1px solid #FFA600;
         }
@@ -39,27 +38,29 @@
         /* Chart settings */    
 
         .bar {
-            position: relative;
-            width: 100%;
-            height: 20px;
-            margin: 10px;
-            padding: 10px;
-            border-radius: 0 5px 5px 0;
-            background-color: #2196F3;
-            transition: width 0.8s ease-in-out;
-            display: flex;
-            align-items: center;
-        }
+    position: relative;
+    width: 100%;
+    height: 20px;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 0 5px 5px 0;
+    background-color: #2196F3;
+    transition: width 0.8s ease-in-out;
+    display: flex;
+    align-items: center;
+    box-shadow: -2px 2px 4px rgba(0, 0, 0, 0.2); /* Add the box shadow with negative horizontal offset */
+}
 
-        .bar::before {
-            content: "";
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 1px; /* Adjust the width of the line as needed */
-            background-color: #000; /* Adjust the color of the line as needed */
-        }
+.bar::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 1px; /* Adjust the width of the line as needed */
+    background-color: #000; /* Adjust the color of the line as needed */
+    box-shadow: -2px 2px 4px rgba(0, 0, 0, 0.2); /* Add the box shadow with negative horizontal offset */
+}
 
         .bar-value {
             font-size: 20px;
@@ -89,7 +90,11 @@
 
         /* General heuristics settings */
         .heuristic {
-     
+            background-color: transparent;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
         }
 
         .heuristic h3.question-title {
@@ -137,6 +142,10 @@
             background-color: #f5f5f5;
             padding: 10px;
         }
+
+        .comment-img{
+            max-width:50%;
+        }
     </style>
 </head>
 <body>
@@ -161,7 +170,7 @@
                 $answer = $question['heuristicAnswer'];
 
                 $comment = $question['heuristicComment'];
-
+                $commentImageUrl = $question['answerImageUrl'];
                 // Store the comment in the comments array
                 if (!isset($commentsArray[$index][$questionId])) {
                     $commentsArray[$index][$questionId] = array();
@@ -248,6 +257,9 @@
                 // End of the chart container
                 echo '</div>';
 
+
+                $imageUrlsByHeuristic = [];
+
                 // Display the corresponding comments for the current chart
                 if (isset($commentsArray[$key][$questionId])) {
                     $nonEmptyComments = array_filter($commentsArray[$key][$questionId]); // Filter out empty comments
@@ -258,7 +270,24 @@
                         echo '</div>';
                         echo '<ul class="comment-list">';
                         foreach ($nonEmptyComments as $comment) {
-                            echo '<li class="comment-item"><div class="comment-text">' . $comment . '</div></li>';
+                            echo '<li class="comment-item">';
+                            echo '<div class="comment-text">' . $comment . '</div>';
+                        // Get the image file path
+                        $imagePath = 'https://firebasestorage.googleapis.com/v0/b/retlab-dev.appspot.com/o/tests%2FQyimdA5xRidzp6PrnIvx%2Fheuristic_1%2F3%2F328916.jpg?alt=media&token=d316ded4-8d93-4b03-a738-9b869b37d6a0';
+
+                        // Read the image file
+                        $imageData = file_get_contents($imagePath);
+
+                        // Convert the image data to base64 format
+                        $base64Image = base64_encode($imageData);
+                        ?>
+
+                        <!-- Echo the image tag with base64 data -->
+                        <?php
+                        echo '<img class="comment-img" src="data:image/jpeg;base64,' . $base64Image . '" alt="Image">';
+                            echo '</li>';
+
+                        
                         }
                         echo '</ul>';
                     }
@@ -270,6 +299,9 @@
             ?>
         </div>
         @endforeach
+       
     </div>
+
+
 </body>
 </html>

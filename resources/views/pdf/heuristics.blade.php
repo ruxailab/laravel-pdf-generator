@@ -40,6 +40,7 @@
         .bar {
     position: relative;
     width: 100%;
+    max-width:90% !important;
     height: 20px;
     margin: 10px;
     padding: 10px;
@@ -143,8 +144,10 @@
             padding: 10px;
         }
 
-        .comment-img{
-            max-width:50%;
+        .center-image {
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
         }
     </style>
 </head>
@@ -171,11 +174,16 @@
 
                 $comment = $question['heuristicComment'];
                 $commentImageUrl = $question['answerImageUrl'];
+                echo $commentImageUrl;
                 // Store the comment in the comments array
                 if (!isset($commentsArray[$index][$questionId])) {
                     $commentsArray[$index][$questionId] = array();
                 }
-                $commentsArray[$index][$questionId][] = $comment;
+                 $commentsArray[$index][$questionId][] = $comment;
+                if (!isset($urlsArray[$index][$questionId])) {
+                    $urlsArray[$index][$questionId] = array();
+                }
+                 $urlsArray[$index][$questionId][] = $commentImageUrl;
                 // Find the corresponding text in the options array
                 $text = null;
                 if ($optionsArray && is_array($optionsArray)) {
@@ -271,20 +279,21 @@
                         echo '<ul class="comment-list">';
                         foreach ($nonEmptyComments as $comment) {
                             echo '<li class="comment-item">';
-                            echo '<div class="comment-text">' . $comment . '</div>';
+                            echo '<div class="comment-text">' . $comment;
                         // Get the image file path
-                        $imagePath = 'https://firebasestorage.googleapis.com/v0/b/retlab-dev.appspot.com/o/tests%2FQyimdA5xRidzp6PrnIvx%2Fheuristic_1%2F3%2F328916.jpg?alt=media&token=d316ded4-8d93-4b03-a738-9b869b37d6a0';
+                        if($urlsArray[$key][$questionId][0]){$imagePath = $urlsArray[$key][$questionId][0];
 
                         // Read the image file
                         $imageData = file_get_contents($imagePath);
 
                         // Convert the image data to base64 format
                         $base64Image = base64_encode($imageData);
+                        }
                         ?>
 
                         <!-- Echo the image tag with base64 data -->
                         <?php
-                        echo '<img class="comment-img" src="data:image/jpeg;base64,' . $base64Image . '" alt="Image">';
+                        echo '<br><img class="center-image" src="data:image/jpeg;base64,' . $base64Image . '" alt="Image"> </div>';
                             echo '</li>';
 
                         

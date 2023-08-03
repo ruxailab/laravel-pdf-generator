@@ -36,11 +36,12 @@ Route::post('/endpoint', function(Request $request){
       'heuristics'=> isset($test["items"][0]["testStructure"]) ? $test["items"][0]["testStructure"] : '',
       'generalStatistics'=> isset($test["items"][0]["gstatistics"]) ? $test["items"][0]["gstatistics"] : '',
       'statisticsTable'=> isset($test["items"][0]["statisticstable"]) ? $test["items"][0]["statisticstable"] : '',
-
+      'heuristicStatistics'=> isset($test["items"][0]["heuristicStatistics"]) ? $test["items"][0]["heuristicStatistics"] : '',
+      'testComments'=> isset($test["items"][0]["testComments"]) ? $test["items"][0]["testComments"] : '',
+      'selectedHeuristics'=> isset($test["items"][0]["selectedHeuristics"]) ? $test["items"][0]["selectedHeuristics"] : '',
     ];
   
   $pdf = PDF::loadView('pdf.invoice', compact('data'));
-  $pdf->getDomPDF()->set_option('enable_remote', true);
   $pdf->render();
   $pdfStream = $pdf->output();
 

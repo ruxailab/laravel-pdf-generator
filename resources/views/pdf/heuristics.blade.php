@@ -129,26 +129,35 @@
         }
 
         /* Comment formatting */
-        .comment-list {
-            list-style-type: none;
-            padding: 0;
-            margin-top: 10px;
-        }
-
         .comment-item {
-            margin-bottom: 10px;
-        }
+        border:1px solid #838383;
+        border-radius: 20px;
 
-        .comment-text {
-            background-color: #f5f5f5;
-            padding: 10px;
-        }
+        padding: 10px;
 
-        .center-image {
-            display: block;
-            margin: 0 auto;
-            max-width: 100%;
-        }
+        display: flex; /* Use flexbox to arrange the comment and image in a column */
+        align-items: center; /* Center items vertically inside the flex container */
+        page-break-inside: avoid;
+    }
+
+    .comment-text {
+        background-color: #E3E3E3;
+        padding: 10px;
+        flex: 1; /* Allow the comment to take up available space in the flex container */
+        border-radius: 5px;
+        text-align: justify; /* Add this line to justify the text */
+        text-justify: inter-word; /* Add this line for better word spacing */
+    }
+
+    .comment-image {
+        text-align: center; /* Center the image horizontally */
+        margin-top: 10px; /* Add some space between the comment and image */
+    }
+
+    .center-image {
+        max-width: 100%;
+        max-height: 80%;
+    }
     </style>
 </head>
 <body>
@@ -174,7 +183,6 @@
 
                 $comment = $question['heuristicComment'];
                 $commentImageUrl = $question['answerImageUrl'];
-                echo $commentImageUrl;
                 // Store the comment in the comments array
                 if (!isset($commentsArray[$index][$questionId])) {
                     $commentsArray[$index][$questionId] = array();
@@ -210,103 +218,107 @@
     <!-- Start of HTML markup -->
     <div class="heuristic">
         @foreach($data['heuristics'] as $key => $item)
-        <div class="question">
-            <h1 class="question-title">Heuristic {{ $key + 1 }}: {{ $item['title'] }}</h1>
-        </div>
+        @if (isset($item) && isset($item['id']) && in_array($item['id'], $data['selectedHeuristics']))
+                <div class="question">
+                    <h1 class="question-title">Heuristic {{ $key + 1 }}: {{ $item['title'] }}</h1>
+                </div>
 
-        <div class="chart">
-            <?php
-            $heuristicQuestions = $data['heuristics'][$key]['questions'];
+                <div class="chart">
+                    <?php
+                    $heuristicQuestions = $data['heuristics'][$key]['questions'];
 
-            foreach ($heuristicQuestions as $index => $question) {
-                $questionId = $question['id'];
-                $total = array_sum($elementCount[$key][$questionId]);
+                    foreach ($heuristicQuestions as $index => $question) {
+                        $questionId = $question['id'];
+                        $total = array_sum($elementCount[$key][$questionId]);
 
-                $colors = ['#EE303A', '#F53D3B', '#FD533A', '#FE5B38', '#FF6937', '#FF7B2F', '#FF8D23']; // Orange tones
+                        $colors = ['#EE303A', '#F53D3B', '#FD533A', '#FE5B38', '#FF6937', '#FF7B2F', '#FF8D23']; // Orange tones
 
-                // Output the question title and description
-                echo '<h2>' . ($index + 1) . " - " . $question['title'] . '</h2>';
-                echo '<p>' . $question['descriptions'] . '</p>';
+                        // Output the question title and description
+                        echo '<h2>' . ($index + 1) . " - " . $question['title'] . '</h2>';
+                        echo '<p>' . $question['descriptions'] . '</p>';
 
-                // Start of the chart container
-                echo '<div style="background-color: #F0F0F0; padding: 10px; border-radius: 20px;">';
+                        // Start of the chart container
+                        echo '<div style="background-color: #F0F0F0; padding: 10px; border-radius: 20px;">';
 
-                // Loop through the optionsArray if it is not null
-                if ($optionsArray && is_array($optionsArray)) {
-                    foreach ($optionsArray as $option) {
-                        $text = $option['text'];
-                        if (isset($elementCount[$key][$questionId][$text])) {
-                            $value = $elementCount[$key][$questionId][$text];
+                        // Loop through the optionsArray if it is not null
+                        if ($optionsArray && is_array($optionsArray)) {
+                            foreach ($optionsArray as $option) {
+                                $text = $option['text'];
+                                if (isset($elementCount[$key][$questionId][$text])) {
+                                    $value = $elementCount[$key][$questionId][$text];
 
-                            $percentage = ($value / $total) * 100;
-                            $width = round($percentage, 2);
+                                    $percentage = ($value / $total) * 100;
+                                    $width = round($percentage, 2);
 
-                            $colorIndex = round(($value / $total) * (count($colors) - 1));
-                            $color = $colors[$colorIndex];
+                                    $colorIndex = round(($value / $total) * (count($colors) - 1));
+                                    $color = $colors[$colorIndex];
 
-                            // Determine the CSS class for value-name based on percentage
-                            $valueNameClass = ($percentage >= 50) ? 'value-name value-name-inside' : 'value-name value-name-outside';
+                                    // Determine the CSS class for value-name based on percentage
+                                    $valueNameClass = ($percentage >= 50) ? 'value-name value-name-inside' : 'value-name value-name-outside';
 
-                            // Set the left value for value-name-outside based on percentage
-                            $leftValue = ($percentage < 30) ? 5 * $percentage . '%' : '0px';
+                                    // Set the left value for value-name-outside based on percentage
+                                    $leftValue = ($percentage < 30) ? 5 * $percentage . '%' : '0px';
 
-                            // Output the bar with value and text
-                            echo '<div class="bar" style="width: ' . $width . '%; background-color: ' . $color . ';">';
-                            echo '<div class="bar-value">' . $value . '</div>';
+                                    // Output the bar with value and text
+                                    echo '<div class="bar" style="width: ' . $width . '%; background-color: ' . $color . ';">';
+                                    echo '<div class="bar-value">' . $value . '</div>';
 
-                            // Output the value-name with the appropriate CSS class and left value
-                            echo '<div class="' . $valueNameClass . '" style="margin-left: ' . $leftValue . ';">' . $text . '</div>';
+                                    // Output the value-name with the appropriate CSS class and left value
+                                    echo '<div class="' . $valueNameClass . '" style="margin-left: ' . $leftValue . ';">' . $text . '</div>';
 
-                            echo '</div>';
+                                    echo '</div>';
+                                }
+                            }
                         }
-                    }
-                }
 
-                // End of the chart container
-                echo '</div>';
-
-
-                $imageUrlsByHeuristic = [];
-
-                // Display the corresponding comments for the current chart
-                if (isset($commentsArray[$key][$questionId])) {
-                    $nonEmptyComments = array_filter($commentsArray[$key][$questionId]); // Filter out empty comments
-                    if (!empty($nonEmptyComments)) {
-                        $commentCount = count($nonEmptyComments);
-                        echo '<div class="comment-title">';
-                        echo ($commentCount > 1) ? '<h3>Comments</h3>' : '<h3>Comment</h3>';
+                        // End of the chart container
                         echo '</div>';
-                        echo '<ul class="comment-list">';
-                        foreach ($nonEmptyComments as $comment) {
-                            echo '<li class="comment-item">';
-                            echo '<div class="comment-text">' . $comment;
-                        // Get the image file path
-                        if($urlsArray[$key][$questionId][0]){$imagePath = $urlsArray[$key][$questionId][0];
 
-                        // Read the image file
-                        $imageData = file_get_contents($imagePath);
 
-                        // Convert the image data to base64 format
-                        $base64Image = base64_encode($imageData);
-                        }
-                        ?>
+                        $imageUrlsByHeuristic = [];
 
-                        <!-- Echo the image tag with base64 data -->
-                        <?php
-                        echo '<br><img class="center-image" src="data:image/jpeg;base64,' . $base64Image . '" alt="Image"> </div>';
-                            echo '</li>';
-
+                        // Display the corresponding comments for the current chart
                         
+                        
+                        if ($data['testComments'] === true && isset($commentsArray[$key][$questionId])) {
+                            $nonEmptyComments = array_filter($commentsArray[$key][$questionId]); // Filter out empty comments
+                            if (!empty($nonEmptyComments)) {
+                                $commentCount = count($nonEmptyComments);
+                                echo '<div class="comment-title">';
+                                echo ($commentCount > 1) ? '<h3>Comments</h3>' : '<h3>Comment</h3>';
+                                echo '</div>';
+                                echo '<ul class="comment-list">';
+                                foreach ($nonEmptyComments as $index => $comment) {
+                                    echo '<li class="comment-item">';
+                                    echo '<div class="comment-text">' . $comment . '</div>';
+                                    // Get the image file path
+                                    if ($urlsArray[$key][$questionId][$index]) {
+                                        $imagePath = $urlsArray[$key][$questionId][$index];
+                
+                                        // Read the image file
+                                        $imageData = file_get_contents($imagePath);
+                
+                                        // Convert the image data to base64 format
+                                        $base64Image = base64_encode($imageData);
+                
+                                        // Echo the image tag with base64 data
+                                        echo '<div class="comment-image">';
+                                        echo '<img class="center-image" src="data:image/jpeg;base64,' . $base64Image . '" alt="Image">';
+                                        echo '</div>';
+                                    
+                                    }
+                                    echo '</li>';
+                                    echo'<div class="page-break"></div>';
+                                }
+                                echo '</ul>';
+                            }
                         }
-                        echo '</ul>';
-                    }
-                }
 
-                // Add a page break after each chart
-                echo '<div class="page-break"></div>';
-            }
-            ?>
-        </div>
+                    }
+                    ?>
+                    <div class="page-break"></div>
+                </div>
+            @endif
         @endforeach
        
     </div>

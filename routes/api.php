@@ -41,9 +41,27 @@ Route::post('/endpoint', function(Request $request){
       'selectedHeuristics'=> isset($test["items"][0]["selectedHeuristics"]) ? $test["items"][0]["selectedHeuristics"] : '',
     ];
   
-  $pdf = PDF::loadView('pdf.invoice', compact('data'));
-  $pdf->render();
-  $pdfStream = $pdf->output();
+ $pdfFilePath = storage_path('Temporary PDF/'); // Change the path as needed
+    // Generate the default PDF
+    $pdf = PDF::loadView('pdf.invoice', compact('data'));
+    $pdf->save($pdfFilePath . 'default.pdf'); // Save the PDF to the specified path
+
+    // Generate the landscape page PDF
+    $landscape_page = PDF::loadView('pdf.landscapePages.landscape_page', compact('data'));
+    $landscape_page->save($pdfFilePath . 'landscape_page.pdf'); // Save the PDF to the specified path
+
+    $merge = new \Clegginabox\PDFMerger\PDFMerger;
+    $merge->addPDF($pdfFilePath . 'default.pdf', 'all');
+    $merge->addPDF($pdfFilePath . 'landscape_page.pdf', 'all', 'L');
+    $merge->merge('file', $pdfFilePath . 'merged.pdf', 'P');
+
+    // Get the merged PDF content
+    $pdfStream = file_get_contents($pdfFilePath . 'merged.pdf');
+
+    // Clean up: Delete the temporary PDF files
+    unlink($pdfFilePath . 'default.pdf');
+    unlink($pdfFilePath . 'landscape_page.pdf');
+    unlink($pdfFilePath . 'merged.pdf');
 
   return response($pdfStream, 200)
     ->header('Content-Type', 'application/pdf')

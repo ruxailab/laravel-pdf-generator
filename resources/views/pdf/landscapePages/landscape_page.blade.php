@@ -5,6 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
+         tbody tr:nth-child(even) {
+            background-color: #DDDDDD;  
+            border-radius: 10px;
+        }
+
+        table{
+            padding: 1rem;
+        }
         .table-content {
             font-size: 12px; /* Adjust the font size as needed */
         }

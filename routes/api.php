@@ -48,6 +48,7 @@ Route::post('/endpoint', function(Request $request){
 
     // Generate the landscape page PDF
     $landscape_page = PDF::loadView('pdf.landscapePages.landscape_page', compact('data'));
+    $landscape_page->setPaper('A4', 'landscape');
     $landscape_page->save($pdfFilePath . 'landscape_page.pdf'); // Save the PDF to the specified path
 
     $merge = new \Clegginabox\PDFMerger\PDFMerger;

@@ -19,7 +19,8 @@
         }
 
         table {
-            padding: 1rem;
+            padding: 0; /* Remove padding */
+            border-spacing: 0; /* Remove spacing between cells */
             table-layout: fixed; /* Fixed table layout */
             width: 100%; /* Full width */
         }
@@ -60,7 +61,8 @@
                     @if (isset($item) && in_array(($index+1), $data['selectedHeuristics']))
 
                     <tr>
-                        <td class="table-content">{{ $data['heuristics'][$index]['title'] }}</td>
+                        <td class="table-content" style="  width: 35%;  text-align: justify;
+    text-justify: inter-word;">{{ $data['heuristics'][$index]['title'] }}</td>
                         @php
                             $total = 0;
                         @endphp

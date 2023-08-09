@@ -175,9 +175,6 @@
                     </tbody>
                 </table>
                 <hr>
-
-                <hr>   
-
                 @if(isset($data['testOptions']) && $data['testOptions'] != '')
                     <div class="options">
                         <h2>Test Options</h2>

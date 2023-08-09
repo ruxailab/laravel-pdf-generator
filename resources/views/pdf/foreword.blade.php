@@ -57,10 +57,18 @@
             $date = $dateTime->format('F j, Y'); // Format the date as "July 17, 2023"
 
             echo $date;
+            
             ?>
         </div>
         <div class="tax-p">
-            <?php echo $data['creatorEmail']; ?>
+            <?php 
+                echo '<div style="font-size: 18px;">' . $data['creatorEmail'] . '</div>'; 
+                foreach($data['cooperatorsEmail'] as $email){
+
+                    echo '<div style="margin-top:10px;text-align: center; font-size: 15px;">' . $email . '</div>';
+                }
+            ?>
+           
         </div>
     </div>
 </body>

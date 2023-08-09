@@ -237,43 +237,6 @@
                         echo '<h2>' . ($index + 1) . " - " . $question['title'] . '</h2>';
                         echo '<p>' . $question['descriptions'] . '</p>';
 
-                        // Start of the chart container
-                        echo '<div style="background-color: #F0F0F0; padding: 10px; border-radius: 20px;">';
-
-                        // Loop through the optionsArray if it is not null
-                        if ($optionsArray && is_array($optionsArray)) {
-                            foreach ($optionsArray as $option) {
-                                $text = $option['text'];
-                                if (isset($elementCount[$key][$questionId][$text])) {
-                                    $value = $elementCount[$key][$questionId][$text];
-
-                                    $percentage = ($value / $total) * 100;
-                                    $width = round($percentage, 2);
-
-                                    $colorIndex = round(($value / $total) * (count($colors) - 1));
-                                    $color = $colors[$colorIndex];
-
-                                    // Determine the CSS class for value-name based on percentage
-                                    $valueNameClass = ($percentage >= 50) ? 'value-name value-name-inside' : 'value-name value-name-outside';
-
-                                    // Set the left value for value-name-outside based on percentage
-                                    $leftValue = ($percentage < 30) ? 5 * $percentage . '%' : '0px';
-
-                                    // Output the bar with value and text
-                                    echo '<div class="bar" style="width: ' . $width . '%; background-color: ' . $color . ';">';
-                                    echo '<div class="bar-value">' . $value . '</div>';
-
-                                    // Output the value-name with the appropriate CSS class and left value
-                                    echo '<div class="' . $valueNameClass . '" style="margin-left: ' . $leftValue . ';">' . $text . '</div>';
-
-                                    echo '</div>';
-                                }
-                            }
-                        }
-
-                        // End of the chart container
-                        echo '</div>';
-
 
                         $imageUrlsByHeuristic = [];
 

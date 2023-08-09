@@ -40,16 +40,16 @@
 @include('pdf.foreword')
 <div class="page-break"></div>
 @include('pdf.description')
-<div class="page-break"></div>
-    <div class="documet">
+
     @if(isset($data['finalReport']) && $data['finalReport'] != '')
+    <div class="page-break"></div>
         @include('pdf.finalReport')
-        <div class="page-break"></div>
+
     @endif
     
-    @if(isset($data['generalStatistics']) && $data['generalStatistics'] != '')
+    @if(isset($data['generalStatistics']) && $data['generalStatistics'] != '' && $data['statistics'] != false)
+        <div class="page-break"></div>    
         @include('pdf.generalStatistics')
-
     @endif
         @include('pdf.heuristics')
     </div>

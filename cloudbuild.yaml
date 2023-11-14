@@ -1,0 +1,25 @@
+steps:
+
+  # Docker Build
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'us-east1-docker.pkg.dev/retlab-dev/laravel-pdf-generator/laravel:latest', '.']
+
+  # Docker Push to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-east1-docker.pkg.dev/retlab-dev/laravel-pdf-generator/laravel:latest']
+
+  # Docker Run on Cloud Run
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - 'run'
+      - 'deploy'
+      - 'laravel-pdf-generator'
+      - '--image'
+      - 'us-east1-docker.pkg.dev/retlab-dev/laravel-pdf-generator/laravel:latest'
+      - '--region'
+      - 'us-east1'
+      - '--platform'
+      - 'managed'
+      - '--port'
+      - '8000'
+      - '--allow-unauthenticated'

@@ -42,8 +42,11 @@
     @include('pdf.cover')
 
     <div class="page-break"></div>
+
     @include('pdf.foreword')
+
     <div class="page-break"></div>
+    
     @include('pdf.description')
 
     @if(isset($data['finalReport']) && $data['finalReport'] != '')
@@ -55,6 +58,7 @@
     <div class="page-break"></div>
     @include('pdf.generalStatistics')
     @endif
+
     @include('pdf.heuristics')
     </div>
 </body>

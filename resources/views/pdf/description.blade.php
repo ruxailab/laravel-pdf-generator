@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>My Project Title</title>
     <style>
@@ -16,9 +17,11 @@
         /* Add any additional styles for different HTML elements here */
     </style>
 </head>
+
 <body>
     <div class="description-body">
-    <?php echo $data['testDescription']; ?>
+        <?php echo $data['testDescription']; ?>
     </div>
 </body>
+
 </html>

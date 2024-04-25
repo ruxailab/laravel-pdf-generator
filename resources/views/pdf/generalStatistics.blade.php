@@ -108,12 +108,14 @@
     $totalNoAplication = 0;
     $totalAnswered = 0;
     $numRows = count($data['statisticsTable']['items']);
+    
     foreach ($data['statisticsTable']['items'] as $item) {
         $totalResults += $item['result'];
         $totalAplication += $item['aplication'];
         $totalNoAplication += $item['noAplication'];
         $totalAnswered += $item['answered'];
     }
+
     $averageResult = $numRows > 0 ? $totalResults / $numRows : 0;
     $averageAplication = $numRows > 0 ? $totalAplication / $numRows : 0;
     $averageNoAplication = $numRows > 0 ? $totalNoAplication / $numRows : 0;
@@ -175,7 +177,7 @@
                     </tbody>
                 </table>
                 <hr>
-                @if(isset($data['testOptions']) && $data['testOptions'] != '')
+                @if(isset($data['allOptions']) && $data['allOptions'] != '')
                     <div class="options">
                         <h2>Test Options</h2>
                             <table>
@@ -187,7 +189,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($data['testOptions'] as $option)
+                                    @foreach($data['allOptions'] as $option)
                                         <tr>
                                             <td>{{$option['text']}}</td>
                                             <td>{{$option['description']}}</td>

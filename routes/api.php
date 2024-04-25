@@ -35,15 +35,15 @@ Route::post('/endpoint', function (Request $request) {
 
     'creatorEmail' => isset($test["items"][0]["creatorEmail"]) ? $test["items"][0]["creatorEmail"] : '',
 
-    'cooperatorsEmail' => isset($test["items"][0]["cooperatorsEmail"]) ? $test["items"][0]["cooperatorsEmail"] : '',
+    'cooperatorsEmail' => isset($test["items"][0]["cooperatorsEmail"]) ? $test["items"][0]["cooperatorsEmail"] : [],
 
     'testDescription' => isset($test["items"][0]["testDescription"]) ? $test["items"][0]["testDescription"] : '',
 
     'finalReport' => isset($test["items"][0]["finalReport"]) ? $test["items"][0]["finalReport"] : '',
 
-    'testOptions' => isset($test["items"][0]["allOptions"]) ? $test["items"][0]["allOptions"] : '',
+    'allOptions' => isset($test["items"][0]["allOptions"]) ? $test["items"][0]["allOptions"] : '',
 
-    'testAnswers' => isset($test["items"][0]["allAnswers"]) ? $test["items"][0]["allAnswers"] : '',
+    'allAnswers' => isset($test["items"][0]["allAnswers"]) ? $test["items"][0]["allAnswers"] : '',
 
     'heuristics' => isset($test["items"][0]["testStructure"]) ? $test["items"][0]["testStructure"] : '',
 
@@ -51,8 +51,7 @@ Route::post('/endpoint', function (Request $request) {
 
     'generalStatistics' => isset($test["items"][0]["gstatistics"]) ? $test["items"][0]["gstatistics"] : '',
 
-    'statisticsTable' => isset($test["items"][0]["statisticstable"]) ? $test["items"][0]["statisticstable"] :
-      '',
+    'statisticsTable' => isset($test["items"][0]["statisticstable"]) ? $test["items"][0]["statisticstable"] : '',
 
     'heuristicStatistics' => isset($test["items"][0]["heuristicStatistics"]) ? $test["items"][0]["heuristicStatistics"] : '',
 
@@ -63,6 +62,7 @@ Route::post('/endpoint', function (Request $request) {
 
 
   $pdfFilePath = Storage::makeDirectory('Temporary PDF');
+
   // Generate the default PDF
   $pdf = PDF::loadView('pdf.invoice', compact('data'));
   $pdf->save($pdfFilePath . 'default.pdf'); // Save the PDF to the specified path

@@ -77,15 +77,15 @@
         </div>
         <div class="tax-p">
             <div class="creatorEmail">
-                <?php
-                echo $data['creatorEmail'];
-                ?>
+                <?php echo $data['creatorEmail']; ?>
             </div>
 
             <?php
-            foreach ($data['cooperatorsEmail'] as $email) {
-                echo '<div class="cooperatorEmail">' . $email . '</div>';
-            }
+                $data['cooperatorsEmail'] = is_array($data['cooperatorsEmail']) ? $data['cooperatorsEmail']: [$data['cooperatorsEmail']];
+
+                foreach ($data['cooperatorsEmail'] as $email) {
+                    echo '<div class="cooperatorEmail">' . $email . '</div>';
+                }
             ?>
 
         </div>

@@ -71,8 +71,6 @@
 	</div>
 	<div class="info">
 		<p>{{{ $data['actualdate'] }}}</p>
-
-
 	</div>
 	</div>
 </body>

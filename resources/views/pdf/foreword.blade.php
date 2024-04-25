@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>My Project Title</title>
     <style>
@@ -20,13 +21,15 @@
             width: 100vw;
             height: 842px;
         }
+
         .tax-title {
             font-size: 24pt;
             font-weight: bold;
-            margin-top:20rem;
+            margin-top: 20rem;
             margin-bottom: 1rem;
             text-align: center;
         }
+
         /* Title settings */
         .tax-h1 {
             font-size: 16pt;
@@ -42,9 +45,21 @@
             font-style: italic;
         }
 
+        .creatorEmail {
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .cooperatorEmail {
+            margin-top: 10px;
+            text-align: center;
+            font-size: 15px;
+        }
+
         /* Add any additional styles for different HTML elements here */
     </style>
 </head>
+
 <body>
     <div class="foreword-container">
         <div class="tax-title">
@@ -57,19 +72,24 @@
             $date = $dateTime->format('F j, Y'); // Format the date as "July 17, 2023"
 
             echo $date;
-            
+
             ?>
         </div>
         <div class="tax-p">
-            <?php 
-                echo '<div style="font-size: 18px;">' . $data['creatorEmail'] . '</div>'; 
-                foreach($data['cooperatorsEmail'] as $email){
+            <div class="creatorEmail">
+                <?php
+                echo $data['creatorEmail'];
+                ?>
+            </div>
 
-                    echo '<div style="margin-top:10px;text-align: center; font-size: 15px;">' . $email . '</div>';
-                }
+            <?php
+            foreach ($data['cooperatorsEmail'] as $email) {
+                echo '<div class="cooperatorEmail">' . $email . '</div>';
+            }
             ?>
-           
+
         </div>
     </div>
 </body>
+
 </html>

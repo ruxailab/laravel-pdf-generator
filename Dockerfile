@@ -7,5 +7,5 @@ RUN composer install
 RUN docker-php-ext-install mysqli pdo pdo_mysql && docker-php-ext-enable pdo_mysql
 
 
-CMD ["php", "artisan", "server"]
+CMD ["php", "artisan", "serve"]
 EXPOSE 8000

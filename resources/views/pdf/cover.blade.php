@@ -1,23 +1,25 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<title>My Project Title</title>
 	<style>
-		html, body {
+		html,
+		body {
 			margin: 0;
 			padding: 0;
 		}
-		
+
 		body {
 			background-color: #f5f5f5;
 		}
-		
+
 		.cape {
 			background-color: #ff6600;
-			height: 150px;
+			height: 250px;
 			position: relative;
 		}
-		
+
 		.cape::after {
 			content: "";
 			display: block;
@@ -27,7 +29,7 @@
 			bottom: -40px;
 			right: 0;
 		}
-		
+
 		.title {
 			font-size: 48px;
 			font-weight: bold;
@@ -38,7 +40,7 @@
 			bottom: 0;
 			left: 2%;
 		}
-		
+
 		.info {
 			font-size: 36px;
 			color: #333;
@@ -49,19 +51,30 @@
 			left: 2%;
 			margin-top: 0;
 		}
-		#footer { position: fixed; right: 10px; bottom: 10px; text-align: center;}
-        #footer .page:after { content: counter(page, decimal); }
+
+		#footer {
+			position: fixed;
+			right: 10px;
+			bottom: 10px;
+			text-align: center;
+		}
+
+		#footer .page:after {
+			content: counter(page, decimal);
+		}
 	</style>
 </head>
+
 <body>
 	<div class="cape">
 		<h1 class="title">{{{ $data['title'] }}}</h1>
 	</div>
 	<div class="info">
-	<p>{{{ $data['actualdate'] }}}</p>
+		<p>{{{ $data['actualdate'] }}}</p>
 
 
 	</div>
-  </div> 
+	</div>
 </body>
+
 </html>

@@ -271,7 +271,6 @@
                                     
                                     }
                                     echo '</li>';
-                                    echo'<div class="page-break"></div>';
                                 }
                                 echo '</ul>';
                             }
@@ -279,7 +278,6 @@
 
                     }
                     ?>
-                    <div class="page-break"></div>
                 </div>
             @endif
         @endforeach

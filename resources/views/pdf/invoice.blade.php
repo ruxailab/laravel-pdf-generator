@@ -39,12 +39,15 @@
 </head>
 
 <body>
+    <!-- option-1 -->
     @include('pdf.cover')
-
+    
     <div class="page-break"></div>
-
+    
     @include('pdf.foreword')
-
+    
+    <div class="page-break"></div>
+    @include('pdf.allOptions')
     <div class="page-break"></div>
     
     @include('pdf.description')
@@ -60,6 +63,8 @@
     @endif
 
     @include('pdf.heuristics')
+
+
     </div>
 </body>
 

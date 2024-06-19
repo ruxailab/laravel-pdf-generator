@@ -101,25 +101,25 @@
     </style>
 </head>
 <body>
-<?php 
+    <?php 
     // Calculate the average of all results
-    $totalResults = 0;
-    $totalAplication = 0;
-    $totalNoAplication = 0;
-    $totalAnswered = 0;
-    $numRows = count($data['statisticsTable']['items']);
-    
-    foreach ($data['statisticsTable']['items'] as $item) {
-        $totalResults += $item['result'];
-        $totalAplication += $item['aplication'];
-        $totalNoAplication += $item['noAplication'];
-        $totalAnswered += $item['answered'];
-    }
+        $totalResults = 0;
+        $totalAplication = 0;
+        $totalNoAplication = 0;
+        $totalAnswered = 0;
+        $numRows = count($data['statisticsTable']['items']);
+        
+        foreach ($data['statisticsTable']['items'] as $item) {
+            $totalResults += $item['result'];
+            $totalAplication += $item['aplication'];
+            $totalNoAplication += $item['noAplication'];
+            $totalAnswered += $item['answered'];
+        }
 
-    $averageResult = $numRows > 0 ? $totalResults / $numRows : 0;
-    $averageAplication = $numRows > 0 ? $totalAplication / $numRows : 0;
-    $averageNoAplication = $numRows > 0 ? $totalNoAplication / $numRows : 0;
-    $averageAnswered = $numRows > 0 ? $totalAnswered / $numRows : 0;
+        $averageResult = $numRows > 0 ? $totalResults / $numRows : 0;
+        $averageAplication = $numRows > 0 ? $totalAplication / $numRows : 0;
+        $averageNoAplication = $numRows > 0 ? $totalNoAplication / $numRows : 0;
+        $averageAnswered = $numRows > 0 ? $totalAnswered / $numRows : 0;
 
     // Retrieve the last item from the array to update the last row with the averages
     $lastItem = end($data['statisticsTable']['items']);
@@ -128,7 +128,7 @@
     $lastItem['noAplication'] = $averageNoAplication;
     $lastItem['answered'] = $averageAnswered;
 
-?>
+    ?>
 
     <div class="statistic">
         <div class="statistic-content">
@@ -180,25 +180,25 @@
                 @if(isset($data['allOptions']) && $data['allOptions'] != '')
                     <div class="options">
                         <h2>Test Options</h2>
-                            <table>
-                                <thead>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="text-align: left;">Name</th>
+                                    <th style="text-align: left;">Description</th>
+                                    <th style="text-align: left;">Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($data['allOptions'] as $option)
                                     <tr>
-                                        <th style="text-align: left;">Name</th>
-                                        <th style="text-align: left;">Description</th>
-                                        <th style="text-align: left;">Value</th>
+                                        <td>{{ $option['text'] }}</td>
+                                        <td>{{ $option['description'] ?? 'N/A' }}</td>
+                                        <td>{{ $option['value'] !== null ? $option['value'] : 'null' }}</td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($data['allOptions'] as $option)
-                                        <tr>
-                                            <td>{{$option['text']}}</td>
-                                            <td>{{$option['description']}}</td>
-                                            <td>{{$option['value'] !== null ? $option['value'] : 'null'}}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                    </div>      
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 @endif
             </div>
         </div>

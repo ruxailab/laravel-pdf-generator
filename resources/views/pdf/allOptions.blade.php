@@ -49,6 +49,7 @@
     </style>
 </head>
 <body>
+@if(isset($data['allOptions']) && $data['allOptions'] != '')
     <div class="options">
         <h2>Test Options</h2>
         <table>
@@ -70,5 +71,6 @@
             </tbody>
         </table>
     </div>
+@endif
 </body>
 </html>

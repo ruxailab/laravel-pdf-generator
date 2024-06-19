@@ -47,7 +47,9 @@
     @include('pdf.foreword')
     
     <div class="page-break"></div>
+    @if(isset($data['allOptions']) && $data['allOptions'] != '')
     @include('pdf.allOptions')
+    @endif
     <div class="page-break"></div>
     
     @include('pdf.description')

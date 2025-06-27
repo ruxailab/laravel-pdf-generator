@@ -21,9 +21,6 @@ header("Access-Control-Allow-Headers: Content-Type");
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-$data = [];
-Route::get('/user/{id}',);
-
 Route::post('/endpoint', function (Request $request) {
   $test = json_decode($request->getContent(), true);
   $data = [
@@ -88,9 +85,4 @@ Route::post('/endpoint', function (Request $request) {
   return response($pdfStream, 200)
     ->header('Content-Type', 'application/pdf')
     ->header('Content-Disposition', 'attachment; filename="file.pdf"');
-});
-
-
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-  return $request->user();
 });

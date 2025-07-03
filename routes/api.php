@@ -55,6 +55,10 @@ Route::post('/endpoint', function (Request $request) {
     'testComments' => isset($test["items"][0]["testComments"]) ? $test["items"][0]["testComments"] : '',
 
     'selectedHeuristics' => isset($test["items"][0]["selectedHeuristics"]) ? $test["items"][0]["selectedHeuristics"] : '',
+
+    'statisticsByEvaluatorAnswer' => isset($test["items"][0]["statisticsByEvaluatorAnswer"]) ? $test["items"][0]["statisticsByEvaluatorAnswer"] : '',
+    
+    'statisticsByHeuristics' => isset($test["items"][0]["statisticsByHeuristics"]) ? $test["items"][0]["statisticsByHeuristics"] : '',
   ];
 
 
@@ -65,13 +69,13 @@ Route::post('/endpoint', function (Request $request) {
   $pdf->save($pdfFilePath . 'default.pdf'); // Save the PDF to the specified path
 
   // Generate the landscape page PDF
-  $landscape_page = PDF::loadView('pdf.landscapePages.landscape_page', compact('data'));
-  $landscape_page->setPaper('A4', 'landscape');
-  $landscape_page->save($pdfFilePath . 'landscape_page.pdf'); // Save the PDF to the specified path
+  // $landscape_page = PDF::loadView('pdf.landscapePages.landscape_page', compact('data'));
+  // $landscape_page->setPaper('A4', 'landscape');
+  // $landscape_page->save($pdfFilePath . 'landscape_page.pdf'); // Save the PDF to the specified path
 
   $merge = new \Clegginabox\PDFMerger\PDFMerger;
   $merge->addPDF($pdfFilePath . 'default.pdf', 'all');
-  $merge->addPDF($pdfFilePath . 'landscape_page.pdf', 'all', 'L');
+  // $merge->addPDF($pdfFilePath . 'landscape_page.pdf', 'all', 'L');
   $merge->merge('file', $pdfFilePath . 'merged.pdf', 'P');
 
   // Get the merged PDF content
@@ -79,8 +83,10 @@ Route::post('/endpoint', function (Request $request) {
 
   // Clean up: Delete the temporary PDF files
   unlink($pdfFilePath . 'default.pdf');
-  unlink($pdfFilePath . 'landscape_page.pdf');
+  // unlink($pdfFilePath . 'landscape_page.pdf');
   unlink($pdfFilePath . 'merged.pdf');
+
+  Storage::deleteDirectory('public/temp');
 
   return response($pdfStream, 200)
     ->header('Content-Type', 'application/pdf')

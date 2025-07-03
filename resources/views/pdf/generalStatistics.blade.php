@@ -1,114 +1,23 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Article Abstract</title>
-    <style>
-        @media print {
-            body {
-                padding: 20mm;
-            }
 
-            .statistic {
-                display: block;
-                width: 100%;
-                height: 100%;
-                box-sizing: border-box;
-            }
+<style> 
 
-            .statistic-content {
-                max-width: 170mm;
-                margin: 0 auto;
-                padding: 0;
-                background-color: #FFFFFF;
-                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-            }
-        }
-        /* Structure body settings */ 
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: #F5F5F5;
-            font-family: Arial, sans-serif;
-            color: #333333;
-        }
+    p {
+        margin: 0;
+        padding: 0;
+    }
+</style>
 
-        .statistic {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-        }
-
-        .statistic-content {
-            max-width: 800px;
-            padding: 20px;
-            background-color: #FFFFFF;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .statistic h1 {
-            color: #FFA600;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #FFA600;
-        }
-        .statistic h2{
-            margin-top:10px !important;
-            margin-left: 10px;
-            padding-bottom: 2px;
-        }
-
-        .statistic p {
-            text-align: justify;
-            text-indent: 1.5em;
-            line-height: 1.5;
-            margin-bottom: 2px;
-        }
-
-        /* Data and content settings */
-        .data {
-            margin-top: 20px;
-            padding: 10px;
-            border: 1px solid #CCCCCC;
-            border-radius: 4px;
-        }
-
-        .data p {
-            margin: 2px 0;
-        }
-        .chip {
-            display: inline-block;
-            text-align: center;
-            width: 100%;
-        }
-
-        hr {
-            height: 4px;
-            background-color: #FFA500;
-            border: none;
-            margin: 20px 0;
-            border-radius: 10px;
-        }
-
-        /* Table settings */
-        tbody tr:nth-child(even) {
-            background-color: #DDDDDD;  
-            border-radius: 10px;
-        }
-
-        table{
-            padding: 1rem;
-        }
-    </style>
-</head>
 <body>
-<?php 
-    // Calculate the average of all results
+    <?php
+    // Cálculo das médias
     $totalResults = 0;
     $totalAplication = 0;
     $totalNoAplication = 0;
     $totalAnswered = 0;
     $numRows = count($data['statisticsTable']['items']);
-    
+
     foreach ($data['statisticsTable']['items'] as $item) {
         $totalResults += $item['result'];
         $totalAplication += $item['aplication'];
@@ -121,87 +30,148 @@
     $averageNoAplication = $numRows > 0 ? $totalNoAplication / $numRows : 0;
     $averageAnswered = $numRows > 0 ? $totalAnswered / $numRows : 0;
 
-    // Retrieve the last item from the array to update the last row with the averages
-    $lastItem = end($data['statisticsTable']['items']);
-    $lastItem['result'] = $averageResult;
-    $lastItem['aplication'] = $averageAplication;
-    $lastItem['noAplication'] = $averageNoAplication;
-    $lastItem['answered'] = $averageAnswered;
+    // Cálculo total de respostas por texto
+    $evaluatorCount = count($data['allAnswers']);
+    $answerTotals = [];
 
-?>
+    foreach ($data['allAnswers'] as $evaluatorIndex => $review) {
+        foreach ($review['heuristicQuestions'] as $heuristicGroup) {
+            foreach ($heuristicGroup['heuristicQuestions'] as $question) {
+                $text = $question['heuristicAnswer']['text'] ?? null;
+                if ($text !== null) {
+                    if (!isset($answerTotals[$text])) {
+                        $answerTotals[$text] = array_fill(0, $evaluatorCount, 0);
+                    }
+                    $answerTotals[$text][$evaluatorIndex]++;
+                }
+            }
+        }
+    }
+    ?>
 
-    <div class="statistic">
-        <div class="statistic-content">
-            <h1>Statistics</h1>
-            <div class="data">
-                <h2>General statistics</h2>
-                <p>Usability percentage: {{ $data['generalStatistics']['average'] }}</p>
-                <p>Max: {{ $data['generalStatistics']['max'] }}</p>
-                <p>Min: {{ $data['generalStatistics']['min'] }}</p>
-                <p>Standard Deviation: {{ $data['generalStatistics']['sd'] }}</p>
-                <p>Total test questions(s): {{ $data['statisticsTable']['items'][0]['aplication'] + $data['statisticsTable']['items'][0]['noAplication'] }}</p>
-                <hr>
-                <h2>Individual test statistics</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Evaluator</th>
-                            <th>Result</th>
-                            <th>Aplication</th>
-                            <th>No Aplication</th>
-                            <th>Answered (%)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($data['statisticsTable']['items'] as $item)
-                            <tr>
-                                <td><span class="chip">{{ $item['evaluator'] }}</span></td>
-                                <td>
-                                    <span class="chip">
-                                        {{ $item['result'] }}%
-                                    </span>
-                                </td>
-                                <td><span class="chip">{{ $item['aplication'] }}</span></td>
-                                <td><span class="chip">{{ $item['noAplication'] }}</span></td>
-                                <td><span class="chip">{{ $item['answered'] }}%</span></td>
-                            </tr>
-                           
+    <div id="statistics" class="page-section">
+        <h1>Statistics</h1>
+
+        <div class="section-spacing">
+            <h2>General statistics</h2>
+            <p><strong>Usability percentage:</strong> {{ $data['generalStatistics']['average'] }}</p>
+            <p><strong>Max:</strong> {{ $data['generalStatistics']['max'] }}</p>
+            <p><strong>Min:<strong> {{ $data['generalStatistics']['min'] }}</p>
+            <p><strong>Standard Deviation:</strong> {{ $data['generalStatistics']['sd'] }}</p>
+            <p><strong>Total test questions(s):</strong> {{ $data['statisticsTable']['items'][0]['aplication'] + $data['statisticsTable']['items'][0]['noAplication'] }}</p>
+        </div>
+
+        <div class="section-spacing">
+            <h2>Distribution of Answers by Evaluator</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Answer</th>
+                        @for ($i = 0; $i < count($data['allAnswers']); $i++)
+                            <th>Ev{{ $i + 1 }}</th>
+                        @endfor
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($answerTotals as $answer => $counts)
+                    <tr>
+                        <td>{{ $answer }}</td>
+                        @foreach ($counts as $count)
+                            <td>{{ $count }}</td>
                         @endforeach
-                        <tr>
-                            <td style="text-align: center; "><strong>Average</strong></td>
-                            <td><span class="chip">{{ number_format($averageResult, 2) }}%</span></td>
-                            <td><span class="chip">{{ number_format($averageAplication, 2) }}</span></td>
-                            <td><span class="chip">{{ number_format($averageNoAplication, 2) }}</span></td>
-                            <td><span class="chip">{{ number_format($averageAnswered, 2) }}%</span></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <hr>
-                @if(isset($data['allOptions']) && $data['allOptions'] != '')
-                    <div class="options">
-                        <h2>Test Options</h2>
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th style="text-align: left;">Name</th>
-                                        <th style="text-align: left;">Description</th>
-                                        <th style="text-align: left;">Value</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($data['allOptions'] as $option)
-                                        <tr>
-                                            <td>{{$option['text']}}</td>
-                                            <td>{{$option['description']}}</td>
-                                            <td>{{$option['value'] !== null ? $option['value'] : 'null'}}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                    </div>      
-                @endif
-            </div>
+                        <td>{{ array_sum($counts) }}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section-spacing">
+            <h2>Individual test statistics</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Evaluator</th>
+                        <th>Result</th>
+                        <th>Aplication</th>
+                        <th>No Aplication</th>
+                        <th>Answered (%)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($data['statisticsTable']['items'] as $item)
+                    <tr>
+                        <td>{{ $item['evaluator'] }}</td>
+                        <td>{{ $item['result'] }}%</td>
+                        <td>{{ $item['aplication'] }}</td>
+                        <td>{{ $item['noAplication'] }}</td>
+                        <td>{{ $item['answered'] }}%</td>
+                    </tr>
+                    @endforeach
+                    <tr>
+                        <td style="text-align: center;"><strong>Average</strong></td>
+                        <td>{{ number_format($averageResult, 2) }}%</td>
+                        <td>{{ number_format($averageAplication, 2) }}</td>
+                        <td>{{ number_format($averageNoAplication, 2) }}</td>
+                        <td>{{ number_format($averageAnswered, 2) }}%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section-spacing">
+            <h2>Answers by Evaluator</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Heuristic</th>
+                        <th>Ev1</th>
+                        <th>Ev2</th>
+                        <th>Ev3</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($data['statisticsByEvaluatorAnswer']['items'] as $row)
+                    <tr>
+                        <td>{{ $row['heuristic'] }}</td>
+                        <td>{{ is_null($row['Ev1']) ? '—' : number_format($row['Ev1'], 2) }}</td>
+                        <td>{{ is_null($row['Ev2']) ? '—' : number_format($row['Ev2'], 2) }}</td>
+                        <td>{{ is_null($row['Ev3']) ? '—' : number_format($row['Ev3'], 2) }}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section-spacing">
+            <h2>Answers by Heuristics</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Heuristic</th>
+                        <th>Percentage (%)</th>
+                        <th>Standard Deviation</th>
+                        <th>Average</th>
+                        <th>Max</th>
+                        <th>Min</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($data['statisticsByHeuristics']['items'] as $row)
+                    <tr>
+                        <td>{{ $row['name'] }}</td>
+                        <td>{{ $row['percentage'] }}</td>
+                        <td>{{ $row['sd'] }}</td>
+                        <td>{{ $row['average'] }}</td>
+                        <td>{{ $row['max'] }}</td>
+                        <td>{{ $row['min'] }}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
     </div>
 </body>
+
 </html>

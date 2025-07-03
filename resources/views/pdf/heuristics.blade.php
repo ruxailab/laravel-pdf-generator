@@ -4,14 +4,7 @@
 <head>
     <title>Heuristic Questions</title>
     <style>
-        /* Page settings */
-        body {
-            background-color: transparent;
-            margin: 0;
-            padding: 20px;
-            font-family: Arial, sans-serif;
-        }
-
+        /* Quebra de página */
         .page-break {
             page-break-before: always;
             page-break-inside: avoid;
@@ -20,33 +13,54 @@
             right: 1cm;
         }
 
-        .heuristic h1 {
-
-            margin-top: 3rem;
-
-            color: #FFA600;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #FFA600;
+        /* Container para as seções específicas das heurísticas */
+        .heuristic {
+            background-color: transparent;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        .question {
-
-            margin-top: 2rem !important;
-
+        /* Título das perguntas - substitui .heuristic h3.question-title */
+        .heuristic .question-title {
+            color: #000000;
+            font-weight: bold;
+            font-size: 24px;
+            margin-bottom: 10px;
+            margin-top: 10px;
         }
 
-        h2 {
-            margin-top: 3rem !important;
+        /* Perguntas */
+        .heuristic .question {
+            color: #333333;
+            margin-bottom: 10px;
         }
 
-        /* Chart settings */
+        .heuristic .question p {
+            margin: 0;
+            line-height: 1.4;
+        }
 
+        /* Lista de respostas */
+        .heuristic .answer {
+            margin-left: 10px;
+            list-style-type: disc;
+        }
+
+        .heuristic .answer li {
+            margin-bottom: 5px;
+        }
+
+        .heuristic .answer li:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Barra de gráfico */
         .bar {
             position: relative;
             width: 100%;
-            max-width: 90% !important;
+            max-width: 90%;
             height: 20px;
-            margin: 10px;
+            margin: 10px 0;
             padding: 10px;
             border-radius: 0 5px 5px 0;
             background-color: #2196F3;
@@ -54,7 +68,6 @@
             display: flex;
             align-items: center;
             box-shadow: -2px 2px 4px rgba(0, 0, 0, 0.2);
-            /* Add the box shadow with negative horizontal offset */
         }
 
         .bar::before {
@@ -64,27 +77,24 @@
             top: 0;
             height: 100%;
             width: 1px;
-            /* Adjust the width of the line as needed */
             background-color: #000;
-            /* Adjust the color of the line as needed */
             box-shadow: -2px 2px 4px rgba(0, 0, 0, 0.2);
-            /* Add the box shadow with negative horizontal offset */
         }
 
         .bar-value {
             font-size: 20px;
-            float: right;
-            margin-right: 4px;
-            margin-bottom: 100px;
             color: black;
+            margin-right: 4px;
+            float: right;
+            margin-bottom: 100px;
         }
 
         .value-name {
             font-size: 20px;
+            color: black;
             float: left;
             position: absolute;
             white-space: nowrap;
-            color: black;
             margin-bottom: 5px;
         }
 
@@ -97,76 +107,29 @@
             color: black;
         }
 
-        /* General heuristics settings */
-        .heuristic {
-            background-color: transparent;
-            border-radius: 5px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        .heuristic h3.question-title {
-            color: #FFA500;
-            font-weight: bold;
-            font-size: 24px;
+        /* Comentários */
+        .comment-item {
+            border: 1px solid #838383;
+            border-radius: 5x;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            page-break-inside: avoid;
             margin-bottom: 10px;
         }
 
-        .heuristic .question {
-            color: #333333;
-            margin-bottom: 15px;
-        }
-
-        .heuristic .question p {
-            margin: 0;
-            line-height: 1.4;
-        }
-
-        .heuristic .answer {
-            margin-left: 20px;
-            list-style-type: disc;
-        }
-
-        .heuristic .answer li {
-            margin-bottom: 5px;
-        }
-
-        .heuristic .answer li:last-child {
-            margin-bottom: 0;
-        }
-
-        /* Comment formatting */
-        .comment-item {
-            border: 1px solid #838383;
-            border-radius: 20px;
-
-            padding: 10px;
-
-            display: flex;
-            /* Use flexbox to arrange the comment and image in a column */
-            align-items: center;
-            /* Center items vertically inside the flex container */
-            page-break-inside: avoid;
-        }
-
         .comment-text {
-            background-color: #E3E3E3;
+            background-color: transparent;
             padding: 10px;
             flex: 1;
-            /* Allow the comment to take up available space in the flex container */
-            border-radius: 5px;
             text-align: justify;
-            /* Add this line to justify the text */
             text-justify: inter-word;
-            /* Add this line for better word spacing */
         }
 
         .comment-image {
             text-align: center;
-            /* Center the image horizontally */
             margin-top: 10px;
-            /* Add some space between the comment and image */
+            margin-left: 10px;
         }
 
         .center-image {
@@ -178,105 +141,198 @@
 
 <body>
     <?php
-    // Decode the JSON data
+
+    use App\Helpers\ImageHelper;
+
     $optionsArray = $data['allOptions'];
+    $commentsArray = [];
 
-    // Comments array to store the answer comments
-    $commentsArray = array();
-
-    // Iterate through each item in the example data
     foreach ($data['allAnswers'] as $item) {
-        // Iterate through each heuristic in the item
         foreach ($item['heuristicQuestions'] as $index => $heuristic) {
-            // Iterate through each question in the heuristic
             foreach ($heuristic['heuristicQuestions'] as $question) {
-                // Get the question ID and answer
                 $questionId = $question['heuristicId'];
-                $answer = $question['heuristicAnswer'];
-
                 $comment = $question['heuristicComment'];
                 $commentImageUrl = $question['answerImageUrl'];
 
-                // Store the comment in the comments array
                 if (!isset($commentsArray[$index][$questionId])) {
-                    $commentsArray[$index][$questionId] = array();
+                    $commentsArray[$index][$questionId] = [];
                 }
-
                 $commentsArray[$index][$questionId][] = $comment;
 
                 if (!isset($urlsArray[$index][$questionId])) {
-                    $urlsArray[$index][$questionId] = array();
+                    $urlsArray[$index][$questionId] = [];
                 }
-
                 $urlsArray[$index][$questionId][] = $commentImageUrl;
             }
         }
     }
     ?>
 
-    <!-- Start of HTML markup -->
-    <div class="heuristic">
+    <div class="page-section">
+        <h1 id="test-data">Test Data</h1>
+
+        <h2>Heuristics</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Heuristic</th>
+                    <th>Questions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($data['heuristics'] as $index => $heuristic)
+                <tr>
+                    <td>{{ $index + 1 }}. {{ $heuristic['title'] }}</td>
+                    <td>
+                        <ul>
+                            @foreach ($heuristic['questions'] as $question)
+                            <li>{{ $question['title'] }}</li>
+                            @endforeach
+                        </ul>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+
+        @if(isset($data['allOptions']) && $data['allOptions'] != '')
+        <h2>Test Options</h2>
+        <div class="options">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($data['allOptions'] as $option)
+                    <tr>
+                        <td>{{$option['text']}}</td>
+                        <td>{{$option['description']}}</td>
+                        <td>{{$option['value'] !== null ? $option['value'] : 'null'}}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+        @endif
+
+        <div class="page-break"></div>
+        <h2>Summary Table per Heuristic</h2>
+        @foreach ($data['heuristics'] as $hIndex => $heuristic)
+        @if (in_array($heuristic['id'], $data['selectedHeuristics']))
+        <h3>H{{ $hIndex + 1 }}: {{ $heuristic['title'] }}</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Question</th>
+                    @foreach ($data['allAnswers'] as $reviewIndex => $review)
+                    <th>Ev{{ $reviewIndex + 1 }}</th>
+                    @endforeach
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($heuristic['questions'] as $qIndex => $question)
+                <tr>
+                    <td>Q{{ $qIndex + 1 }}</td>
+                    @foreach ($data['allAnswers'] as $reviewIndex => $review)
+                    @php
+                    $matchedHeuristic = collect($review['heuristicQuestions'])->firstWhere('heuristicId', $heuristic['id']);
+                    $answerData = $matchedHeuristic['heuristicQuestions'][$qIndex] ?? null;
+                    $answerValue = $answerData['heuristicAnswer']['value'] ?? '-';
+                    @endphp
+                    <td style="text-align: center;">{{ $answerValue }}</td>
+                    @endforeach
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+        @endif
+        @endforeach
+
+        <div class="page-break"></div>
+
+        <h2>Answers by Heuristic</h2>
         @foreach($data['heuristics'] as $key => $item)
         @if (isset($item) && isset($item['id']) && in_array($item['id'], $data['selectedHeuristics']))
-        <div class="question">
-            <h1 class="question-title">Heuristic {{ $key + 1 }}: {{ $item['title'] }}</h1>
-        </div>
+        <div class="heuristic">
+            <div class="question">
+                <h3 class="question-title">Heuristic {{ $key + 1 }}: {{ $item['title'] }}</h3>
+            </div>
 
-        <div class="chart">
-            <?php
-            $heuristicQuestions = $data['heuristics'][$key]['questions'];
+            <div class="chart">
+                <?php
+                $heuristicQuestions = $data['heuristics'][$key]['questions'];
 
-            foreach ($heuristicQuestions as $index => $question) {
-                $questionId = $question['id'];
-                $colors = ['#EE303A', '#F53D3B', '#FD533A', '#FE5B38', '#FF6937', '#FF7B2F', '#FF8D23']; // Orange tones
+                foreach ($heuristicQuestions as $questionIndex => $question) {
+                    $questionId = $question['id'];
+                    echo '<h4>Q' . ($questionIndex + 1) . ' - ' . $question['title'] . '</h4>';
 
-                // Output the question title and description
-                echo '<h2>' . ($index + 1) . " - " . $question['title'] . '</h2>';
+                    // Summary answers
+                    echo '<div class="summary-table" style="margin-bottom: 1rem;">';
+                    echo '<table>';
+                    echo '<thead><tr><th>Evaluator</th><th>Answer</th><th>Value</th></tr></thead>';
+                    echo '<tbody>';
 
-                $question['descriptions'] = is_array($question['descriptions']) ? $question['descriptions'] : [$question['descriptions']];
-                foreach ($question['descriptions'] as $description) {
-                    echo '<p>' . $description . '</p>';
-                }
+                    foreach ($data['allAnswers'] as $reviewIndex => $review) {
+                        $matchedHeuristic = collect($review['heuristicQuestions'])->firstWhere('heuristicId', $item['id']);
 
-                $imageUrlsByHeuristic = [];
+                        if (!$matchedHeuristic || empty($matchedHeuristic['heuristicQuestions'][$questionIndex])) {
+                            continue;
+                        }
 
-                // Display the corresponding comments for the current chart
-                if ($data['testComments'] === true && isset($commentsArray[$key][$questionId])) {
-                    $nonEmptyComments = array_filter($commentsArray[$key][$questionId]); // Filter out empty comments
-                    if (!empty($nonEmptyComments)) {
-                        $commentCount = count($nonEmptyComments);
-                        echo '<div class="comment-title">';
-                        echo ($commentCount > 1) ? '<h3>Comments</h3>' : '<h3>Comment</h3>';
-                        echo '</div>';
-                        echo '<ul class="comment-list">';
-                        foreach ($nonEmptyComments as $index => $comment) {
-                            echo '<li class="comment-item">';
-                            echo '<div class="comment-text">' . $comment . '</div>';
-                            // Get the image file path
-                            if ($urlsArray[$key][$questionId][$index]) {
-                                $imagePath = $urlsArray[$key][$questionId][$index];
+                        $answerData = $matchedHeuristic['heuristicQuestions'][$questionIndex];
+                        $answerText = $answerData['heuristicAnswer']['text'] ?? '-';
+                        $answerValue = $answerData['heuristicAnswer']['value'] ?? '-';
 
-                                // Read the image file
-                                $imageData = file_get_contents($imagePath);
+                        echo '<tr>';
+                        echo '<td>Ev' . ($reviewIndex + 1) . '</td>';
+                        echo '<td>' . $answerText . '</td>';
+                        echo '<td>' . $answerValue . '</td>';
+                        echo '</tr>';
+                    }
 
-                                // Convert the image data to base64 format
-                                $base64Image = base64_encode($imageData);
+                    echo '</tbody></table>';
+                    echo '</div>';
 
-                                // Echo the image tag with base64 data
+                    // Comments
+                    echo '<div class="review-answers">';
+                    foreach ($data['allAnswers'] as $reviewIndex => $review) {
+                        $matchedHeuristic = collect($review['heuristicQuestions'])->firstWhere('heuristicId', $item['id']);
+
+                        if (!$matchedHeuristic || empty($matchedHeuristic['heuristicQuestions'][$questionIndex])) {
+                            continue;
+                        }
+
+                        $answerData = $matchedHeuristic['heuristicQuestions'][$questionIndex];
+                        $comment = $answerData['heuristicComment'] ?? '';
+                        $imageUrl = $answerData['answerImageUrl'] ?? '';
+
+                        if (!empty($comment)) {
+                            echo '<div class="comment-item">';
+                            echo '<div class="comment-text"><strong>Ev' . ($reviewIndex + 1) . ' comment:</strong> ' . $comment . '</div>';
+
+                            if (!empty($imageUrl)) {
                                 echo '<div class="comment-image">';
-                                echo '<img class="center-image" src="data:image/jpeg;base64,' . $base64Image . '" alt="Image">';
+                                $localImagePath = ImageHelper::saveImageFromUrl($imageUrl);
+                                if ($localImagePath) {
+                                    echo '<img class="center-image" src="' . $localImagePath . '" alt="Image">';
+                                }
                                 echo '</div>';
                             }
-                            echo '</li>';
+                            echo '</div>';
                         }
-                        echo '</ul>';
                     }
+                    echo '</div>';
                 }
-            }
-            ?>
+                ?>
+            </div>
         </div>
         @endif
         @endforeach
     </div>
 </body>
+
 </html>

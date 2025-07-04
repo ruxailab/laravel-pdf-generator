@@ -4,85 +4,60 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Allow-Headers: Content-Type");
 
+Route::post('/generate-pdf', function (Request $request) {
+  ini_set('max_execution_time', 600);
 
-// use App\Http\Controllers\ApiController;
-
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
-Route::post('/endpoint', function (Request $request) {
   $test = json_decode($request->getContent(), true);
+  $item = $test["items"][0] ?? [];
+
   $data = [
-    'title' => isset($test["items"][0]["title"]) ? $test["items"][0]["title"] : '',
-
-    'actualdate' => isset($test["items"][0]["date"]) ? $test["items"][0]["date"] : '',
-
-    'creationDate' => isset($test["items"][0]["creationDate"]) ? $test["items"][0]["creationDate"] : '',
-
-    'creatorEmail' => isset($test["items"][0]["creatorEmail"]) ? $test["items"][0]["creatorEmail"] : '',
-
-    'cooperatorsEmail' => isset($test["items"][0]["cooperatorsEmail"]) ? $test["items"][0]["cooperatorsEmail"] : [],
-
-    'testDescription' => isset($test["items"][0]["testDescription"]) ? $test["items"][0]["testDescription"] : '',
-
-    'finalReport' => isset($test["items"][0]["finalReport"]) ? $test["items"][0]["finalReport"] : '',
-
-    'allOptions' => isset($test["items"][0]["allOptions"]) ? $test["items"][0]["allOptions"] : '',
-
-    'allAnswers' => isset($test["items"][0]["allAnswers"]) ? $test["items"][0]["allAnswers"] : '',
-
-    'heuristics' => isset($test["items"][0]["testStructure"]) ? $test["items"][0]["testStructure"] : '',
-
-    'statistics' => isset($test["items"][0]["statistics"]) ? $test["items"][0]["statistics"] : '',
-
-    'generalStatistics' => isset($test["items"][0]["gstatistics"]) ? $test["items"][0]["gstatistics"] : '',
-
-    'statisticsTable' => isset($test["items"][0]["statisticstable"]) ? $test["items"][0]["statisticstable"] : '',
-
-    'heuristicStatistics' => isset($test["items"][0]["heuristicStatistics"]) ? $test["items"][0]["heuristicStatistics"] : '',
-
-    'testComments' => isset($test["items"][0]["testComments"]) ? $test["items"][0]["testComments"] : '',
-
-    'selectedHeuristics' => isset($test["items"][0]["selectedHeuristics"]) ? $test["items"][0]["selectedHeuristics"] : '',
+    'title' => $item["title"] ?? '',
+    'creationDate' => $item["creationDate"] ?? '',
+    'creatorEmail' => $item["creatorEmail"] ?? '',
+    'cooperatorsEmail' => $item["cooperatorsEmail"] ?? [],
+    'testDescription' => $item["testDescription"] ?? '',
+    'finalReport' => $item["finalReport"] ?? '',
+    'allOptions' => $item["allOptions"] ?? [],
+    'allAnswers' => $item["allAnswers"] ?? [],
+    'heuristics' => $item["testStructure"] ?? [],
+    'generalStatistics' => $item["gstatistics"] ?? [],
+    'statisticsTable' => $item["statisticstable"] ?? [],
+    'statisticsByEvaluatorAnswer' => $item["statisticsByEvaluatorAnswer"] ?? [],
+    'statisticsByHeuristics' => $item["statisticsByHeuristics"] ?? [],
   ];
 
+  // Diretório temporário
+  $pdfDir = Storage::path('Temporary PDF');
+  Storage::makeDirectory('Temporary PDF');
 
-  $pdfFilePath = Storage::makeDirectory('Temporary PDF');
+  // Nome do arquivo final
+  $titleSlug = Str::slug(data_get($item, 'title', 'report'), '_');
+  $timestamp = now()->format('Ymd_His');
+  $filename = "final_report_{$titleSlug}_{$timestamp}.pdf";
+  $mergedPath = $pdfDir . "/{$filename}";
 
-  // Generate the default PDF
+  // Gerar o PDF principal
   $pdf = PDF::loadView('pdf.invoice', compact('data'));
-  $pdf->save($pdfFilePath . 'default.pdf'); // Save the PDF to the specified path
+  $defaultPath = $pdfDir . '/default.pdf';
+  $pdf->save($defaultPath);
 
-  // Generate the landscape page PDF
-  $landscape_page = PDF::loadView('pdf.landscapePages.landscape_page', compact('data'));
-  $landscape_page->setPaper('A4', 'landscape');
-  $landscape_page->save($pdfFilePath . 'landscape_page.pdf'); // Save the PDF to the specified path
-
+  // Mesclar o PDF
   $merge = new \Clegginabox\PDFMerger\PDFMerger;
-  $merge->addPDF($pdfFilePath . 'default.pdf', 'all');
-  $merge->addPDF($pdfFilePath . 'landscape_page.pdf', 'all', 'L');
-  $merge->merge('file', $pdfFilePath . 'merged.pdf', 'P');
+  $merge->addPDF($defaultPath, 'all');
+  $merge->merge('file', $mergedPath, 'P');
 
-  // Get the merged PDF content
-  $pdfStream = file_get_contents($pdfFilePath . 'merged.pdf');
-
-  // Clean up: Delete the temporary PDF files
-  unlink($pdfFilePath . 'default.pdf');
-  unlink($pdfFilePath . 'landscape_page.pdf');
-  unlink($pdfFilePath . 'merged.pdf');
+  // Obter conteúdo final e limpar
+  $pdfStream = file_get_contents($mergedPath);
+  unlink($defaultPath);
+  unlink($mergedPath);
+  Storage::deleteDirectory('public/temp');
 
   return response($pdfStream, 200)
     ->header('Content-Type', 'application/pdf')
-    ->header('Content-Disposition', 'attachment; filename="file.pdf"');
+    ->header("Content-Disposition", "attachment; filename=\"{$filename}\"");
 });

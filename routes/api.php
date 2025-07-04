@@ -10,6 +10,8 @@ header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Allow-Headers: Content-Type");
 
 Route::post('/generate-pdf', function (Request $request) {
+  ini_set('max_execution_time', 600);
+
   $test = json_decode($request->getContent(), true);
   $item = $test["items"][0] ?? [];
 

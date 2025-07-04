@@ -128,23 +128,16 @@
     @include('pdf.cover')
 
     <div class="page-break"></div>
-
     @include('pdf.foreword')
 
     <div class="page-break"></div>
-
     @include('pdf.description')
 
     <div class="page-break"></div>
-
-    @if(isset($data['finalReport']) && $data['finalReport'] != '')
     @include('pdf.finalReport')
-    @endif
-
-    @if(isset($data['generalStatistics']) && $data['generalStatistics'] != '' && $data['statistics'] != false)
+    
     <div class="page-break"></div>
     @include('pdf.generalStatistics')
-    @endif
     
     <div class="page-break"></div>
     @include('pdf.heuristics')

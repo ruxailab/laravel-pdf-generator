@@ -195,7 +195,6 @@
             </tbody>
         </table>
 
-        @if(isset($data['allOptions']) && $data['allOptions'] != '')
         <h2>Test Options</h2>
         <div class="options">
             <table>
@@ -217,12 +216,10 @@
                 </tbody>
             </table>
         </div>
-        @endif
 
         <div class="page-break"></div>
         <h2>Summary Table per Heuristic</h2>
         @foreach ($data['heuristics'] as $hIndex => $heuristic)
-        @if (in_array($heuristic['id'], $data['selectedHeuristics']))
         <h3>H{{ $hIndex + 1 }}: {{ $heuristic['title'] }}</h3>
         <table>
             <thead>
@@ -249,14 +246,12 @@
                 @endforeach
             </tbody>
         </table>
-        @endif
         @endforeach
 
         <div class="page-break"></div>
 
         <h2>Answers by Heuristic</h2>
         @foreach($data['heuristics'] as $key => $item)
-        @if (isset($item) && isset($item['id']) && in_array($item['id'], $data['selectedHeuristics']))
         <div class="heuristic">
             <div class="question">
                 <h3 class="question-title">Heuristic {{ $key + 1 }}: {{ $item['title'] }}</h3>
@@ -330,7 +325,6 @@
                 ?>
             </div>
         </div>
-        @endif
         @endforeach
     </div>
 </body>

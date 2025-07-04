@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Allow-Headers: Content-Type");
 
-Route::post('/endpoint', function (Request $request) {
+Route::post('/generate-pdf', function (Request $request) {
   $test = json_decode($request->getContent(), true);
   $item = $test["items"][0] ?? [];
 

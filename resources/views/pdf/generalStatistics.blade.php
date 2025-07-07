@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html>
 
-<style> 
-
+<style>
     p {
         margin: 0;
         padding: 0;
@@ -69,8 +68,8 @@
                         <th>Answer</th>
                         @for ($i = 0; $i < count($data['allAnswers']); $i++)
                             <th>Ev{{ $i + 1 }}</th>
-                        @endfor
-                        <th>Total</th>
+                            @endfor
+                            <th>Total</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -78,7 +77,7 @@
                     <tr>
                         <td>{{ $answer }}</td>
                         @foreach ($counts as $count)
-                            <td>{{ $count }}</td>
+                        <td>{{ $count }}</td>
                         @endforeach
                         <td>{{ array_sum($counts) }}</td>
                     </tr>
@@ -126,18 +125,26 @@
                 <thead>
                     <tr>
                         <th>Heuristic</th>
-                        <th>Ev1</th>
-                        <th>Ev2</th>
-                        <th>Ev3</th>
+                        @php
+                        // Pega os nomes das colunas dinâmicas (exceto "heuristic")
+                        $evaluators = [];
+                        if (!empty($data['statisticsByEvaluatorAnswer']['items'])) {
+                        $firstRow = $data['statisticsByEvaluatorAnswer']['items'][0];
+                        $evaluators = array_keys(array_filter($firstRow, fn($_, $key) => $key !== 'heuristic', ARRAY_FILTER_USE_BOTH));
+                        }
+                        @endphp
+                        @foreach ($evaluators as $ev)
+                        <th>{{ $ev }}</th>
+                        @endforeach
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($data['statisticsByEvaluatorAnswer']['items'] as $row)
                     <tr>
                         <td>{{ $row['heuristic'] }}</td>
-                        <td>{{ is_null($row['Ev1']) ? '—' : number_format($row['Ev1'], 2) }}</td>
-                        <td>{{ is_null($row['Ev2']) ? '—' : number_format($row['Ev2'], 2) }}</td>
-                        <td>{{ is_null($row['Ev3']) ? '—' : number_format($row['Ev3'], 2) }}</td>
+                        @foreach ($evaluators as $ev)
+                        <td>{{ is_null($row[$ev]) ? '—' : number_format($row[$ev], 2) }}</td>
+                        @endforeach
                     </tr>
                     @endforeach
                 </tbody>

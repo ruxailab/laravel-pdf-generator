@@ -1,24 +1,103 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Laravel PDF Generator ✅
 
-## Deploy
+A lightweight Laravel project that demonstrates PDF generation (using packages like `barryvdh/laravel-dompdf`) and includes a simple web UI. This README explains how to get the project running locally and in Docker.
 
-To perform the deployment it is necessary to store a docker image in the Artifact Registry, follow the command to deploy:
+---
 
-1 - Generate an image to upload to the Artifact Registry: <br>
-`docker build -t us-central1-docker.pkg.dev/PROJECT/name-docker-repo/name-image:latest .`
+## 🚀 Quick Start
 
-* `us-central1` is the repository location.
-* `docker.pkg.dev` is the hostname of the Docker repository you created.
-* `PROJECT` is the Google Cloud project ID.
-* `name-docker-repo` is the ID of the repository you created.
-* `name-image` is the name of the image you want to use in the repository.
-* `latest` is a tag you are adding to the Docker image.
+1. Clone the repository
 
-2 - Upload the generated image to the Artifact Registry:<br>
-`docker push us-central1-docker.pkg.dev/PROJECT/name-docker-repo/name-image:latest`
+```bash
+git clone <repo-url> laravel-pdf-generator
+cd laravel-pdf-generator
+```
 
-3 - Change the image in Cloud Run
+2. Install PHP dependencies
 
-## License
+```bash
+composer install
+```
+
+3. Copy the environment file and set values
+
+```bash
+cp .env.example .env
+# On Windows (PowerShell): Copy-Item .env.example .env
+```
+
+4. Serve the application
+
+```bash
+php artisan serve 
+```
+
+Open your browser at: `http://127.0.0.1:8000`
+
+---
+
+## 🧪 Tests
+
+Run the test suite with:
+
+```bash
+php artisan test
+```
+
+---
+
+## 🐳 Docker (optional)
+
+This repository contains a `Dockerfile`. A simple way to build and run the image locally:
+
+```bash
+docker build -t laravel-pdf-generator .
+docker run -it --rm -p 8000:8000 \
+  -e APP_ENV=local -e APP_KEY="base64:..." \
+  laravel-pdf-generator
+```
+
+(Adjust environment variables and entrypoint as required; for production deployments prefer using a multi-stage build or Docker Compose.)
+
+---
+
+## ⚠️ Troubleshooting & Tips
+
+- If `composer install` fails with memory errors, run:
+
+```bash
+COMPOSER_MEMORY_LIMIT=-1 composer install
+```
+
+- Ensure PHP extensions required by Laravel are installed (openssl, pdo, mbstring, tokenizer, xml, ctype, json, bcmath).
+
+- On Windows, if symlinks fail for `php artisan storage:link`, create the `storage` public folder manually or run your terminal as Administrator.
+
+- If assets are not updating, try:
+
+```bash
+npm run dev
+php artisan view:clear
+php artisan route:clear
+php artisan config:clear
+```
+
+---
+
+## 📁 Project notes
+
+- PDF generation uses `barryvdh/laravel-dompdf` (already included in `composer.json`). Check `resources/views/pdf/` for example templates.
+
+- Routes and controllers are located in `app/Http/Controllers` and views are in `resources/views`.
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome — please open an issue or a pull request.
+
+---
+
+## 📜 License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).

@@ -43,6 +43,7 @@ Route::post('/generate-pdf', function (Request $request) {
             'creationDate' => $item["creationDate"] ?? '',
             'creatorEmail' => $item["creatorEmail"] ?? '',
             'cooperatorsEmail' => $item["cooperatorsEmail"] ?? [],
+            'description' => $item["description"] ?? '',
             'testDescription' => $item["testDescription"] ?? '',
             'finalReport' => $item["finalReport"] ?? '',
             'allOptions' => $item["allOptions"] ?? [],

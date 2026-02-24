@@ -49,24 +49,24 @@ Route::post('/generate-pdf', function (Request $request) {
             'allOptions' => $item["allOptions"] ?? [],
             'allAnswers' => $item["allAnswers"] ?? [],
             'heuristics' => $item["testStructure"] ?? [],
-            'generalStatistics' => $item["gstatistics"] ?? [],
-            'statisticsTable' => $item["statisticstable"] ?? [],
+            'generalStatistics' => $item["generalStatistics"] ?? [],
+            'statisticsTable' => $item["statisticsTable"] ?? [],
             'statisticsByEvaluatorAnswer' => $item["statisticsByEvaluatorAnswer"] ?? [],
             'statisticsByHeuristics' => $item["statisticsByHeuristics"] ?? [],
         ];
 
         // 🔹 Escolha do layout
-       $testType = $item["type"] ?? 'HEURISTIC';
+        $testType = $item["type"] ?? 'HEURISTIC';
 
-if ($testType === 'USER') {
-    $view = 'pdf.userTest';
+        if ($testType === 'USER') {
+            $view = 'pdf.userTest';
 
-    $data['allAnswers'] = $item['taskAnswers'] ?? [];
-} else {
-    $view = 'pdf.invoice';
+            $data['allAnswers'] = $item['taskAnswers'] ?? [];
+        } else {
+            $view = 'pdf.invoice';
 
-    $data['allAnswers'] = $item['allAnswers'] ?? [];
-}
+            $data['allAnswers'] = $item['allAnswers'] ?? [];
+        }
 
         if (!view()->exists($view)) {
             return response()->json([
@@ -121,25 +121,25 @@ if ($testType === 'USER') {
 
     } catch (\Throwable $e) {
 
-    $errorId = (string) Str::uuid();
+        $errorId = (string) Str::uuid();
 
-    Log::error('PDF generation failed', [
-        'error_id' => $errorId,
-        'message' => $e->getMessage(),
-        'file' => $e->getFile(),
-        'line' => $e->getLine(),
-        'trace' => $e->getTraceAsString(),
-    ]);
-
-    return response()->json([
-        'error' => 'Failed to generate PDF',
-        'error_id' => $errorId,
-        'error_code' => 'PDF_GENERATION_ERROR',
-        'debug' => config('app.debug') ? [
+        Log::error('PDF generation failed', [
+            'error_id' => $errorId,
             'message' => $e->getMessage(),
             'file' => $e->getFile(),
             'line' => $e->getLine(),
-        ] : null
-    ], 500);
-}
+            'trace' => $e->getTraceAsString(),
+        ]);
+
+        return response()->json([
+            'error' => 'Failed to generate PDF',
+            'error_id' => $errorId,
+            'error_code' => 'PDF_GENERATION_ERROR',
+            'debug' => config('app.debug') ? [
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ] : null
+        ], 500);
+    }
 });

@@ -4,7 +4,6 @@ namespace App\Helpers;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class ImageHelper
@@ -12,21 +11,65 @@ class ImageHelper
     public static function saveImageFromUrl(string $url): ?string
     {
         try {
-            // Gera um nome único para a imagem
-            $filename = 'img_' . Str::random(10) . '.' . pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION);
+            // Validate URL
+            if (empty($url) || !filter_var($url, FILTER_VALIDATE_URL)) {
+                return null;
+            }
 
-            // Faz o download
-            $imageData = Http::get($url)->body();
+            // Generate unique filename
+            $extension = pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION);
+            if (empty($extension)) {
+                $extension = 'png'; // default extension
+            }
+            $filename = 'img_' . Str::random(10) . '.' . $extension;
 
-            // Salva no disco (public/temp)
-            $path = 'public/temp/' . $filename;
-            Storage::put($path, $imageData);
+            // Download image with timeout
+            $response = Http::timeout(30)->get($url);
+            
+            if (!$response->successful()) {
+                Log::warning("Failed to download image: HTTP " . $response->status() . " - " . $url);
+                return null;
+            }
 
-            // Retorna caminho absoluto para usar no PDF
-            return public_path('storage/temp/' . $filename);
+            $imageData = $response->body();
+
+            // Create temp directory if it doesn't exist
+            $tempDir = public_path('temp');
+            if (!file_exists($tempDir)) {
+                mkdir($tempDir, 0755, true);
+            }
+
+            // Save directly to public/temp directory
+            $fullPath = $tempDir . '/' . $filename;
+            file_put_contents($fullPath, $imageData);
+
+            // Return absolute path for DomPDF
+            return $fullPath;
         } catch (\Exception $e) {
-            Log::error("Erro ao baixar imagem: " . $e->getMessage());
+            Log::error("Error downloading image from {$url}: " . $e->getMessage());
             return null;
+        }
+    }
+    
+    /**
+     * Clean old temporary images (optional, call this periodically)
+     */
+    public static function cleanTempImages(): void
+    {
+        try {
+            $tempDir = public_path('temp');
+            if (file_exists($tempDir)) {
+                $files = glob($tempDir . '/img_*.{png,jpg,jpeg,gif,webp}', GLOB_BRACE);
+                $now = time();
+                foreach ($files as $file) {
+                    // Delete files older than 1 hour
+                    if (is_file($file) && ($now - filemtime($file)) > 3600) {
+                        unlink($file);
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            Log::error("Error cleaning temp images: " . $e->getMessage());
         }
     }
 }

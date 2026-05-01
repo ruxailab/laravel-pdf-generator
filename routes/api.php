@@ -1,5 +1,6 @@
 <?php
 
+use App\Helpers\ImageHelper;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -47,6 +48,7 @@ Route::post('/generate-pdf', function (Request $request) {
             'statisticsTable' => $item['statisticsTable'] ?? [],
             'statisticsByEvaluatorAnswer' => $item['statisticsByEvaluatorAnswer'] ?? [],
             'statisticsByHeuristics' => $item['statisticsByHeuristics'] ?? [],
+            'heuristicComments' => $item['heuristicComments'] ?? [],
         ];
 
         $testType = $item['type'] ?? 'HEURISTIC';
@@ -71,6 +73,9 @@ Route::post('/generate-pdf', function (Request $request) {
 
         $pdf = Pdf::loadView($view, ['data' => $data]);
         $pdfStream = $pdf->output();
+
+        // Clean old temporary images
+        ImageHelper::cleanTempImages();
 
         return response($pdfStream, 200)
             ->header('Content-Type', 'application/pdf')

@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Heuristic Questions</title>
+    <title>Study Data</title>
     <style>
         /* Quebra de página */
         .page-break {
@@ -182,90 +182,8 @@
 
 <body>
     <?php
-
     use App\Helpers\ImageHelper;
-
-    $optionsArray = $data['allOptions'];
-    $commentsArray = [];
-
-    foreach ($data['allAnswers'] as $item) {
-        foreach ($item['heuristicQuestions'] as $index => $heuristic) {
-            foreach ($heuristic['heuristicQuestions'] as $question) {
-                $questionId = $question['heuristicId'];
-                $comment = $question['heuristicComment'];
-                $commentImageUrl = $question['answerImageUrl'];
-
-                if (!isset($commentsArray[$index][$questionId])) {
-                    $commentsArray[$index][$questionId] = [];
-                }
-                $commentsArray[$index][$questionId][] = $comment;
-
-                if (!isset($urlsArray[$index][$questionId])) {
-                    $urlsArray[$index][$questionId] = [];
-                }
-                $urlsArray[$index][$questionId][] = $commentImageUrl;
-            }
-        }
-    }
     ?>
-
-    <div class="page-section">
-        <h1 id="heuristic-structure">Heuristic Evaluation Structure</h1>
-        
-        <p class="section-intro">
-            This section outlines the complete structure of the heuristic evaluation framework used in this study. 
-            It provides a comprehensive list of all evaluated heuristics with their associated questions, 
-            along with the test options and their scoring values used for the evaluation.
-        </p>
-
-        <h2 id="heuristics-list">Heuristics</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Heuristic</th>
-                    <th>Questions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($data['heuristics'] as $index => $heuristic)
-                <tr>
-                    <td>{{ $index + 1 }}. {{ $heuristic['title'] }}</td>
-                    <td>
-                        <ul>
-                            @foreach ($heuristic['questions'] as $question)
-                            <li>{{ $question['title'] }}</li>
-                            @endforeach
-                        </ul>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-
-        <h2 id="heuristic-answers">Heuristic possible answers</h2>
-        <div class="options">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th>Value</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($data['allOptions'] as $option)
-                    <tr>
-                        <td>{{$option['text']}}</td>
-                        <td>{{$option['description']}}</td>
-                        <td>{{$option['value'] !== null ? $option['value'] : 'null'}}</td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <div class="page-break"></div>
 
     <div class="page-section">
         <h1 id="study-data">Study Data</h1>
@@ -409,5 +327,4 @@
         @endforeach
     </div>
 </body>
-
 </html>

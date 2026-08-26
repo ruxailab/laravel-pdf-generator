@@ -2,7 +2,8 @@
 
 set -Eeuo pipefail
 
-PROJECT_ID="${PROJECT_ID:-$(gcloud config get-value project 2>/dev/null)}"
+PROJECT_ID="${PROJECT_ID:-}"
+ENVIRONMENT="${ENVIRONMENT:-}"
 REGION="${REGION:-us-central1}"
 REPOSITORY="${REPOSITORY:-containers}"
 SERVICE_NAME="${SERVICE_NAME:-laravel-pdf-generator}"
@@ -15,6 +16,7 @@ usage() {
 Usage: ./deploy.sh [options]
 
 Options:
+  --environment ENVIRONMENT  Deployment environment: develop or production
   --project PROJECT_ID       Google Cloud project (default: gcloud config)
   --region REGION            Google Cloud region (default: us-central1)
   --repository NAME          Artifact Registry repository (default: containers)
@@ -24,13 +26,16 @@ Options:
   -h, --help                 Show this help
 
 Environment variables with the same names are also supported:
-PROJECT_ID, REGION, REPOSITORY, SERVICE_NAME, IMAGE_NAME, TAG,
-ALLOW_UNAUTHENTICATED.
+ENVIRONMENT, PROJECT_ID, REGION, REPOSITORY, SERVICE_NAME, IMAGE_NAME,
+TAG, ALLOW_UNAUTHENTICATED.
+
+For environment deploys, set DEVELOP_PROJECT_ID or PRODUCTION_PROJECT_ID.
 EOF
 }
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
+    --environment) ENVIRONMENT="$2"; shift 2 ;;
     --project) PROJECT_ID="$2"; shift 2 ;;
     --region) REGION="$2"; shift 2 ;;
     --repository) REPOSITORY="$2"; shift 2 ;;
@@ -41,6 +46,25 @@ while [[ $# -gt 0 ]]; do
     *) echo "Unknown option: $1" >&2; usage >&2; exit 1 ;;
   esac
 done
+
+case "$ENVIRONMENT" in
+  develop)
+    PROJECT_ID="${PROJECT_ID:-${DEVELOP_PROJECT_ID:-}}"
+    ;;
+  production)
+    PROJECT_ID="${PROJECT_ID:-${PRODUCTION_PROJECT_ID:-}}"
+    ;;
+  "")
+    ;;
+  *)
+    echo "ERROR: environment must be 'develop' or 'production'." >&2
+    exit 1
+    ;;
+esac
+
+if [[ -z "$PROJECT_ID" ]]; then
+  PROJECT_ID="$(gcloud config get-value project 2>/dev/null)"
+fi
 
 if [[ -z "$PROJECT_ID" || "$PROJECT_ID" == "(unset)" ]]; then
   echo "ERROR: configure a Google Cloud project with gcloud config set project PROJECT_ID or --project." >&2

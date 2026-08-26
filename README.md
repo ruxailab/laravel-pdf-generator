@@ -80,6 +80,21 @@ To require authentication, use:
 
 You can override the defaults with options such as `--project`, `--region`, `--repository`, `--service`, and `--tag`.
 
+### Deploy by environment
+
+Configure the Google Cloud projects and use the commands below:
+
+```bash
+export DEVELOP_PROJECT_ID=YOUR_DEVELOP_PROJECT_ID
+export PRODUCTION_PROJECT_ID=YOUR_PRODUCTION_PROJECT_ID
+
+npm run deploy-develop
+npm run deploy-production
+```
+
+You can also specify the environment directly with `./deploy.sh --environment develop`
+or `./deploy.sh --environment production`. All other script options remain available.
+
 ---
 
 ## ⚠️ Troubleshooting & Tips

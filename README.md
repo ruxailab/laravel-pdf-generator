@@ -59,6 +59,27 @@ docker run -it --rm -p 8000:8000 \
 
 (Adjust environment variables and entrypoint as required; for production deployments prefer using a multi-stage build or Docker Compose.)
 
+## ☁️ Deploy to Cloud Run
+
+Prerequisites: install and authenticate `gcloud` and Docker, select a Google Cloud project, and grant your account permissions for Artifact Registry and Cloud Run.
+
+```bash
+gcloud auth login
+gcloud config set project YOUR_PROJECT_ID
+chmod +x deploy.sh
+./deploy.sh
+```
+
+The script enables the required APIs, uses the `containers` Docker repository in Artifact Registry, builds and pushes the image, and deploys it to Cloud Run. The default region is `us-central1` and the default service is `laravel-pdf-generator`.
+
+To require authentication, use:
+
+```bash
+./deploy.sh --authenticated
+```
+
+You can override the defaults with options such as `--project`, `--region`, `--repository`, `--service`, and `--tag`.
+
 ---
 
 ## ⚠️ Troubleshooting & Tips

@@ -22,4 +22,8 @@ steps:
       - 'managed'
       - '--port'
       - '8000'
+      - '--memory'
+      - '512Mi'
+      - '--concurrency'
+      - '1'
       - '--allow-unauthenticated'

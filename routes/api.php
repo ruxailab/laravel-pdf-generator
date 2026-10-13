@@ -71,6 +71,13 @@ Route::post('/generate-pdf', function (Request $request) {
         $timestamp = now()->format('Ymd_His');
         $filename = "final_report_{$titleSlug}_{$timestamp}.pdf";
 
+        logger()->info('PDF memory diagnostics', [
+            'memory_limit' => ini_get('memory_limit'),
+            'sapi' => PHP_SAPI,
+            'php_binary' => PHP_BINARY,
+            'memory_usage' => memory_get_usage(true),
+            'memory_peak' => memory_get_peak_usage(true),
+        ]);
         $pdf = Pdf::loadView($view, ['data' => $data]);
         $pdfStream = $pdf->output();
 

@@ -105,6 +105,8 @@ deploy_args=(
   --region "$REGION"
   --platform managed
   --port 8000
+  --memory 512Mi
+  --concurrency 1
   --project "$PROJECT_ID"
 )
 

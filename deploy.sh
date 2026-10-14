@@ -96,7 +96,7 @@ if ! gcloud artifacts repositories describe "$REPOSITORY" \
 fi
 
 gcloud auth configure-docker "${REGION}-docker.pkg.dev" --quiet
-docker build --platform linux/amd64 -t "$IMAGE_URI" .
+docker build --no-cache --platform linux/amd64 -t "$IMAGE_URI" .
 docker push "$IMAGE_URI"
 
 deploy_args=(

@@ -3,8 +3,8 @@
     "scripts": {
         "dev": "vite",
         "build": "vite build",
-        "deploy-develop": "ENVIRONMENT=develop ./deploy.sh",
-        "deploy-production": "ENVIRONMENT=production ./deploy.sh"
+        "deploy-develop": "PROJECT_ID=\"$DEVELOP_PROJECT_ID\" ENVIRONMENT=develop ./deploy.sh",
+        "deploy-production": "PROJECT_ID=\"$PRODUCTION_PROJECT_ID\" ENVIRONMENT=production ./deploy.sh"
     },
     "devDependencies": {
         "axios": "^1.1.2",
